@@ -13,12 +13,19 @@
   "dependencies": {
     "@mui/x-charts": "^8.10.2",
     "@primer/react": "^37.31.0",
+    "@primer/react-brand": "^0.57.2",
+    "@radix-ui/themes": "^3.2.1",
     "@tailwindcss/vite": "^4.1.12",
+    "firebase": "^12.1.0",
     "husky": "^9.1.7",
     "jotai": "^2.13.1",
     "lucide-react": "^0.541.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-error-boundary": "^6.0.0",
+    "react-image": "^4.1.0",
+    "react-router-dom": "^7.8.1",
+    "reactjs-tiptap-editor": "^0.3.18",
     "tailwindcss": "^4.1.12"
   },
   "devDependencies": {

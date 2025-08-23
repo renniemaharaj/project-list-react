@@ -1,9 +1,9 @@
-import Index from "./pages/page/views/Index";
-import Missing from "./pages/page/views/Missing";
+import Index from "./pages/page/index";
+import Missing from "./pages/page/views/missing";
 import type { CustomRoute, IndexRoute } from "./pages/page/routing";
-import CreateDocument from "./pages/page/views/Create";
+import CreateDocument from "./pages/page/views/create";
 
-import Base from "./pages/page/Base";
+import Base from "./pages/page/base";
 
 export const protectedRoutes: CustomRoute[] = [];
 

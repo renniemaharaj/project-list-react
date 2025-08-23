@@ -1,6 +1,6 @@
 import { useSetAtom } from "jotai";
-import { showCreateFormAtom } from "../../../state/app.atoms";
 import { useEffect } from "react";
+import { showCreateFormAtom } from "../../../../state/app.atoms";
 
 const CreateDocument = () => {
   const setShowCreateForm = useSetAtom(showCreateFormAtom);

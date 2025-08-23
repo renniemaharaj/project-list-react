@@ -7,10 +7,11 @@ import "@primer/react-brand/lib/css/main.css";
 import "@primer/primitives/dist/css/functional/themes/light.css";
 import "@primer/primitives/dist/css/functional/themes/dark.css";
 import { ThemeProvider, BaseStyles } from "@primer/react";
-import EBoundary from "./pages/page/views/EBoundary";
+import EBoundary from "./pages/page/views/eBoundary";
 import { Theme } from "@radix-ui/themes";
 import { ThemeProvider as LocalThemeProvider } from "./hooks/theme/ThemeProvider";
 import useThemeContext from "./hooks/theme/useThemeContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
 
 function AppShell() {
   const { theme } = useThemeContext();
+  const queryClient = new QueryClient();
   return (
     <ThemeProvider
       colorMode={
@@ -44,7 +46,9 @@ function AppShell() {
          grayColor="sage"
          className=""
        >
+        <QueryClientProvider client={queryClient}>
         <AppRoutes />
+        </QueryClientProvider>
     </Theme>
       </BaseStyles>
     </ThemeProvider>

@@ -1,8 +1,8 @@
 import { useCallback, type ReactNode } from "react";
-import SubNavBar from "./SubNavBar";
+import SubNavBar from "../nav/SubNavBar";
 import { Box } from "@primer/react-brand";
-import CreateFormDialog from "./forms/CreateDialog";
-import SidePane from "./SidePane";
+import CreateFormDialog from "../forms/CreateDialog";
+import SidePane from "../sidepane/SidePane";
 import { FScreenLayout } from "./FScreenLayout";
 
 const Base = ({ children }: { children?: ReactNode }) => {

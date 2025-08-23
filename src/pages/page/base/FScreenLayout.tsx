@@ -57,7 +57,7 @@ export const FScreenLayout: React.FC<FullScreenLayoutProps> = ({
             <div className="w-full mb-2 overflow-auto">
               <Button
                 size="small"
-                variant="default"
+                variant="invisible"
                 className="holographic-card w-full"
                 onClick={() => setIsCollapsed(!isCollapsed)}
                 aria-label={isCollapsed ? "Expand panel" : "Collapse panel"}

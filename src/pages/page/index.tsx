@@ -1,11 +1,7 @@
-import { useEffect } from "react";
+import Metrics from "../../pkg/dashboard/Metrics";
 
 const Index = () => {
-  useEffect(() => {
-
-  }, []);
-
-  return <></>;
+  return <Metrics />;
 };
 
 export default Index;

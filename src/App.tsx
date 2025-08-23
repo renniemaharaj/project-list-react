@@ -1,20 +1,26 @@
 import { Routes, Route } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
-import { AuthRouter } from "./pkg/firebase/auth/AuthRouter";
-import { protectedRoutesFunc, publicRoutesFunc } from "./pages/page/routing";
 
 import "@primer/react-brand/lib/css/main.css";
 import "@primer/primitives/dist/css/functional/themes/light.css";
 import "@primer/primitives/dist/css/functional/themes/dark.css";
-import { ThemeProvider, BaseStyles } from "@primer/react";
+
+import { ThemeProvider as PrimerThemeProvider, BaseStyles } from "@primer/react";
+import { Theme as RadixTheme } from "@radix-ui/themes";
+import { createTheme, ThemeProvider as MUIThemeProvider } from "@mui/material/styles";
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+import { AuthRouter } from "./pkg/firebase/auth/AuthRouter";
+import { protectedRoutesFunc, publicRoutesFunc } from "./pages/page/routing";
 import EBoundary from "./pages/page/views/eBoundary";
-import { Theme } from "@radix-ui/themes";
+
 import { ThemeProvider as LocalThemeProvider } from "./hooks/theme/ThemeProvider";
 import useThemeContext from "./hooks/theme/useThemeContext";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function App() {
   return (
+    // Local context: stores and provides "light" | "dark"
     <LocalThemeProvider>
       <ErrorBoundary FallbackComponent={EBoundary}>
         <AppShell />
@@ -24,34 +30,40 @@ function App() {
 }
 
 function AppShell() {
-  const { theme } = useThemeContext();
+  const { theme } = useThemeContext(); // "light" | "dark"
   const queryClient = new QueryClient();
+
+  // MUI theme adapts to local theme
+  const muiTheme = createTheme({
+    palette: {
+      mode: theme === "light" ? "light" : "dark",
+    },
+  });
+
   return (
-    <ThemeProvider
-      colorMode={
-        ((theme === "dark" && "dark") ||
-          (theme === "light" && "light") ||
-          (theme === "inherit" && "auto")) as "dark" | "light" | "auto"
-      }
-    >
+    // Primer theme provider
+    <PrimerThemeProvider colorMode={theme as "light" | "dark"}>
       <BaseStyles>
-        <Theme
-         appearance={theme}
-         accentColor="gold"
-         radius="full"
-         asChild={false}
-         // hasBackground={true}
-         panelBackground="translucent"
-         scaling="110%"
-         grayColor="sage"
-         className=""
-       >
-        <QueryClientProvider client={queryClient}>
-        <AppRoutes />
-        </QueryClientProvider>
-    </Theme>
+        {/* Radix theme decorator */}
+        <RadixTheme
+          appearance={theme}
+          accentColor="gold"
+          radius="full"
+          panelBackground="translucent"
+          scaling="110%"
+          grayColor="sage"
+        >
+          {/* React Query */}
+          <QueryClientProvider client={queryClient}>
+            {/* MUI Theme */}
+            <MUIThemeProvider theme={muiTheme}>
+              {/* Routes */}
+              <AppRoutes />
+            </MUIThemeProvider>
+          </QueryClientProvider>
+        </RadixTheme>
       </BaseStyles>
-    </ThemeProvider>
+    </PrimerThemeProvider>
   );
 }
 

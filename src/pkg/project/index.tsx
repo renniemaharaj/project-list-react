@@ -1,4 +1,4 @@
-import { Avatar, Badge, Card, Flex, Heading, Text } from "@radix-ui/themes";
+import { Avatar, Badge, Flex, Heading, Text } from "@radix-ui/themes";
 import type { ProjectMetaData, ProjectProps } from "./types";
 import { Spinner } from "@radix-ui/themes";
 import useQueryProjectMeta from "../../state/hooks/useQueryProjectMeta";
@@ -6,6 +6,9 @@ import { Gauge } from "@mui/x-charts/Gauge";
 import { differenceInDays } from "date-fns";
 import Meta from "./Meta";
 import useThemeContext from "../../hooks/theme/useThemeContext";
+import Card from "@mui/material/Card";
+import AnimatedNumber from "../animatedNumber";
+import * as motion from "motion/react-client";
 
 export default function ProjectCard({ project }: { project: ProjectProps }) {
   const {
@@ -16,7 +19,7 @@ export default function ProjectCard({ project }: { project: ProjectProps }) {
     projectID: project.id,
   });
 
-  const {theme} = useThemeContext()
+  const { theme } = useThemeContext();
 
   const debit =
     (projectMeta as ProjectMetaData)?.timeEntries
@@ -39,10 +42,20 @@ export default function ProjectCard({ project }: { project: ProjectProps }) {
     ) <= 7;
 
   return (
+     <motion.div
+          initial={{ x: -100, opacity: 0 }}   // start below and hidden
+          animate={{ x: 0, opacity: 1 }}     // move up into place
+          transition={{
+            duration: 0.8,
+            delay: 0.5,
+            ease: [0, 0.71, 0.2, 1.01],
+          }}
+          >
     <Card
-      className={`p-4 cursor-pointer shadow-md hover:shadow-lg transition-all w-full max-w-lg ${
-        recent ? "" : "border-2 border-red-400"
-      } ${theme === "light" ? "bg-blue-50":""}`}
+      variant="outlined"
+      className={`p-4 cursor-pointer transition-all w-full max-w-lg ${
+        recent ? "border-2 border-transparent" : " border-red-400"
+      } ${theme === "light" ? "!bg-blue-50" : ""}`}
     >
       <Flex className="flex flex-col gap-3">
         {/* Header */}
@@ -57,19 +70,28 @@ export default function ProjectCard({ project }: { project: ProjectProps }) {
         <Flex className="flex flex-row items-center justify-between mb-4">
           <div className="flex gap-4">
             <div className="flex flex-col">
-              <span className="text-sm font-medium text-blue-600">Debit</span>
-              <span className="text-lg font-semibold">{debit}h</span>
+              <span className="text-sm font-medium text-blue-600">Hrs Assigned</span>
+              <span className="text-lg font-semibold">
+                <AnimatedNumber
+                  number={debit}
+                  fontStyle={{ fontSize: 30, color: "green" }}
+                />
+                hrs
+              </span>
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-medium text-purple-600">
-                Credit
+                Hrs Used
               </span>
-              <span
-                className={`text-lg font-semibold ${
-                  credit > debit && "!text-red-500"
-                }`}
-              >
-                {credit}h
+              <span>
+                <AnimatedNumber
+                  number={credit}
+                  fontStyle={{
+                    fontSize: 30,
+                    color: credit > debit ? "red" : "green",
+                  }}
+                />
+                hrs
               </span>
             </div>
           </div>
@@ -117,5 +139,6 @@ export default function ProjectCard({ project }: { project: ProjectProps }) {
         )}
       </Flex>
     </Card>
+    </motion.div>
   );
 }

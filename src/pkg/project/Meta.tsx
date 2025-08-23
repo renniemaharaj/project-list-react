@@ -32,7 +32,7 @@ const Meta = ({
 
       <Flex
         className={`${
-          isMinimized ? "h-10" : "h-20"
+          isMinimized ? "h-0" : "h-20"
         } overflow-auto flex flex-col gap-3 transition-all`}
       >
         {/* Manager Info */}

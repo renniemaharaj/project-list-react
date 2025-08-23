@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import type { ProjectProps } from '../../pkg/project/types';
 
 const fetchURL = "http://localhost:8081/projects";
 
@@ -11,7 +12,7 @@ const fetchProjects = async () => {
 };
 
 const useQueryProjects = () => {
-  return useQuery({
+  return useQuery<ProjectProps[]>({
     queryKey: ["projects"],
     queryFn: fetchProjects,
     staleTime: 1000 * 60 * 5, // cache data for 5 minutes

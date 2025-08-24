@@ -6,27 +6,28 @@ import {
   Briefcase,
 } from "lucide-react";
 
-import useQueryDashboard from "../../state/hooks/useQueryDashboard";
+import useQueryDashboard from "../../state/hooks/tanstack/useQueryDashboard";
 import StatCard from "./StatCard";
 import { PieChart } from "@mui/x-charts";
 import { useEffect, useState } from "react";
 import { skeletonDashboardMetrics } from "./config";
-import type { DashboardMetrics } from "../../state/hooks/types";
+import type { DashboardMetrics } from "./types";
 import Gauge from "./Gauge";
 
 const Metrics = () => {
-  const { data, isLoading, error } = useQueryDashboard();
+  const { query } = useQueryDashboard();
   const [metrics, setMetrics] = useState<DashboardMetrics>();
 
   useEffect(() => {
-    if (isLoading) {
+    if (query.isLoading) {
       setMetrics(skeletonDashboardMetrics);
     } else {
-      if (data) setMetrics(data);
+      if (query.data) setMetrics(query.data);
     }
-  }, [data, isLoading, error]);
+  }, [query]);
 
-  if (error) return <p className="text-red-500">Error loading dashboard.</p>;
+  if (query.error)
+    return <p className="text-red-500">Error loading dashboard.</p>;
   if (!metrics) return null;
 
   return (
@@ -40,9 +41,9 @@ const Metrics = () => {
             label={`Total Projects (${metrics.projects})`}
             gauge={
               <PieChart
-              style={{
-                transition:"all 1s ease-in-out"
-              }}
+                style={{
+                  transition: "all 1s ease-in-out",
+                }}
                 series={[
                   {
                     data: [

@@ -1,4 +1,4 @@
-import type { DashboardMetrics } from "../../state/hooks/types";
+import type { DashboardMetrics } from "./types";
 
 // A nil dashboard for skeleton
 export const skeletonDashboardMetrics: DashboardMetrics = {

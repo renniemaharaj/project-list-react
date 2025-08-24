@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Button } from "@primer/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@primer/octicons-react";
 import { Box } from "@primer/react";
+import { projectExplorerPageNumberAtom } from "../../../state/app.atoms";
+import { useSetAtom } from "jotai";
 
 type FullScreenLayoutProps = {
   header?: React.ReactNode;
@@ -33,13 +35,28 @@ export const FScreenLayout: React.FC<FullScreenLayoutProps> = ({
   // Track collapsed state of side panel
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  return (
+  const flexRef = useRef<HTMLDivElement>(null);
 
-    <div className="flex flex-col h-screen w-screen overflow-hidden" style={{
-      backgroundColor: 'var(--bgColor-inset)',
-    borderRadius: 'var(--borderRadius-medium)',
-    padding: 'var(--stack-padding-spacious)',
-    }}>
+  const setProjectExplorerPageNumber = useSetAtom(
+    projectExplorerPageNumberAtom
+  );
+
+  const incrementPage = () => {
+    setProjectExplorerPageNumber((prev) => prev + 1);
+
+    if (flexRef.current)
+      flexRef.current.scrollTo({ top: 0, behavior: "smooth"});
+  };
+
+  return (
+    <div
+      className="flex flex-col h-screen w-screen overflow-hidden"
+      style={{
+        backgroundColor: "var(--bgColor-inset)",
+        borderRadius: "var(--borderRadius-medium)",
+        padding: "var(--stack-padding-spacious)",
+      }}
+    >
       {/* Header */}
       {header && <div className="flex-shrink-0 border-b">{header}</div>}
 
@@ -52,9 +69,9 @@ export const FScreenLayout: React.FC<FullScreenLayoutProps> = ({
             width: isCollapsed ? `${paneCW[0]}rem` : `${paneCW[1]}rem`,
           }}
         >
-          <div className="h-full w-full p-2 overflow-y-auto">
+          <div className="h-full w-full scroll-smooth p-2 overflow-x-hidden overflow-y-auto">
             {/* Collapse/Expand Button */}
-            <div className="w-full mb-2 overflow-auto">
+            <div ref={flexRef} className="w-full mb-2 overflow-auto">
               <Button
                 size="small"
                 variant="invisible"
@@ -67,12 +84,28 @@ export const FScreenLayout: React.FC<FullScreenLayoutProps> = ({
             </div>
 
             {/* Side Panel Content (hidden when collapsed) */}
-            <div className={isCollapsed ? "hidden" : "block"}>{side}</div>
+            <div className={`${isCollapsed ? "hidden" : "block"}`}>
+              <>
+                {side}
+                <br />
+                <Button
+                  size="small"
+                  variant="invisible"
+                  className="holographic-card w-full"
+                  onClick={incrementPage}
+                  aria-label={"Next Page"}
+                >
+                  Next Page
+                </Button>
+              </>
+            </div>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto !justify-center p-2">{content}</div>
+        <div className="flex-1 overflow-y-auto !justify-center p-2">
+          {content}
+        </div>
       </Box>
 
       {/* Footer */}

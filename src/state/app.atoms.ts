@@ -11,3 +11,5 @@ export const showUpdateFormAtom = atom(false);
 
 // Whether to display community documents instead of user's
 export const showCommunityPageAtom = atom(false);
+
+export const projectExplorerPageNumberAtom = atom(0)

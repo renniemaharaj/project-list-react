@@ -1,11 +1,24 @@
 import { useParams } from "react-router-dom";
-import useGetProject from "../../../../state/hooks/useGetProject";
 import ProjectCard from "../../../../pkg/project";
-import type { ProjectProps } from "../../../../pkg/project/types";
+import useQueryProject from "../../../../state/hooks/tanstack/useQueryProject";
+import { useCallback, useEffect } from "react";
 
 const Project = () => {
   const { projectID } = useParams();
-  const { getProjectByID } = useGetProject();
+  const { query, setProjectID } = useQueryProject();
+
+  const setProjectIDCallback = useCallback(
+    (ID: number) => {
+      setProjectID(ID);
+    },
+    [setProjectID]
+  );
+
+  useEffect(() => {
+    // Parse projectID first
+    const parsedID = Number(projectID);
+    setProjectIDCallback(parsedID);
+  }, [projectID, setProjectIDCallback]);
 
   // Parse projectID first
   const parsedID = Number(projectID);
@@ -13,19 +26,15 @@ const Project = () => {
     return <p className="text-red-500">Invalid project ID in URL.</p>;
   }
 
-  const projectInURL = getProjectByID(parsedID);
-
-  if (projectInURL === 0) {
+  if (query.isLoading) {
     return <p className="text-gray-500">Loading project...</p>;
   }
 
-  if (projectInURL === 1) {
+  if (query.error) {
     return <p className="text-red-500">Could not fetch project.</p>;
   }
 
-  if (typeof projectInURL === "object") {
-    return <ProjectCard size="lg" project={projectInURL as ProjectProps} />;
-  }
+  if (query.data) return <ProjectCard size="lg" project={query.data} />;
 
   return <p className="text-red-500">Unexpected error loading project.</p>;
 };

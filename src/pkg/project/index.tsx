@@ -1,7 +1,7 @@
 import { Avatar, Badge, Flex, Heading, Text } from "@radix-ui/themes";
 import type { ProjectMetaData, ProjectProps } from "./types";
 import { Spinner } from "@radix-ui/themes";
-import useQueryProjectMeta from "../../state/hooks/useQueryProjectMeta";
+import useQueryProjectMeta from "../../state/hooks/tanstack/useQueryProjectMeta";
 import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
 import { differenceInDays } from "date-fns";
 import Meta from "./Meta";
@@ -9,9 +9,8 @@ import useThemeContext from "../../hooks/theme/useThemeContext";
 import Card from "@mui/material/Card";
 import AnimatedNumber from "../animatedNumber";
 import * as motion from "motion/react-client";
-import useGetProjectInURL from "../../state/hooks/useGetProjectInURL";
 import { PieChart } from "@mui/x-charts";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function ProjectCard({
   project,
@@ -20,25 +19,27 @@ export default function ProjectCard({
   project: ProjectProps;
   size?: "sm" | "lg";
 }) {
-  const {
-    data: projectMeta,
-    isLoading,
-    error,
-  } = useQueryProjectMeta({
-    projectID: project.ID,
-  });
+  const { data, error, isLoading, setProjectID } = useQueryProjectMeta();
+  const [projectMeta, setProjectMeta] = useState<ProjectMetaData>();
 
-  const getProjectInURL = useGetProjectInURL();
+  useEffect(() => {
+    setProjectID(project.ID);
+  }, [project, setProjectID]);
+
+  useEffect(() => {
+    if (!data) return;
+    setProjectMeta(data);
+  }, [data]);
 
   const { theme } = useThemeContext();
 
   const debit =
-    (projectMeta as ProjectMetaData)?.timeEntries
+    projectMeta?.timeEntries
       .filter((e) => e.type === "debit")
       .reduce((acc, e) => acc + e.hours, 0) ?? 0;
 
   const credit =
-    (projectMeta as ProjectMetaData)?.timeEntries
+    projectMeta?.timeEntries
       .filter((e) => e.type === "credit")
       .reduce((acc, e) => acc + e.hours, 0) ?? 0;
 
@@ -49,12 +50,12 @@ export default function ProjectCard({
     projectMeta &&
     differenceInDays(
       new Date(),
-      new Date(projectMeta.manager?.updatedAt ?? Date.now())
+      new Date(projectMeta.timeEntries[-1]?.dateCreated ?? Date.now())
     ) <= 7;
 
   const getConsultantNameByID = useCallback(
     (timeEntry: number) => {
-      const consultants = (projectMeta as ProjectMetaData).consultants;
+      const consultants = projectMeta?.consultants;
       const consultant = consultants?.find(
         (consultant) => consultant.ID === timeEntry
       );
@@ -62,11 +63,6 @@ export default function ProjectCard({
     },
     [projectMeta]
   );
-
-  const URLParam = typeof getProjectInURL === "object";
-
-  if (URLParam && (getProjectInURL as ProjectProps).ID === project.ID)
-    if (size === "sm") return null;
 
   return (
     <motion.div
@@ -148,7 +144,7 @@ export default function ProjectCard({
                 <PieChart
                   series={[
                     {
-                      data: (projectMeta as ProjectMetaData)?.timeEntries
+                      data: projectMeta?.timeEntries
                         ?.filter((timeEntry) => timeEntry.type !== "credit")
                         .map((timeEntry) => ({
                           id: timeEntry.ID,
@@ -189,7 +185,7 @@ export default function ProjectCard({
             <>
               {/* Consultants */}
               <div className="flex -space-x-3">
-                {(projectMeta as ProjectMetaData)?.consultants?.map((c) => (
+                {projectMeta?.consultants?.map((c) => (
                   <Avatar
                     key={c.ID}
                     src={c.profilePicture}

@@ -8,11 +8,11 @@ import {
 
 import useQueryDashboard from "../../state/hooks/useQueryDashboard";
 import StatCard from "./StatCard";
-import { Gauge, PieChart } from "@mui/x-charts";
-import AnimatedNumber from "../animatedNumber";
+import { PieChart } from "@mui/x-charts";
 import { useEffect, useState } from "react";
 import { skeletonDashboardMetrics } from "./config";
 import type { DashboardMetrics } from "../../state/hooks/types";
+import Gauge from "./Gauge";
 
 const Metrics = () => {
   const { data, isLoading, error } = useQueryDashboard();
@@ -34,103 +34,91 @@ const Metrics = () => {
       <h1 className="text-2xl font-bold">Hello, Rennie </h1>
       <div className="p-6 space-y-6">
         {/* Big Total Projects Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4">
           <StatCard
             icon={<Briefcase />}
-            label="Total Projects"
-            value={
-              <>
-                <PieChart
-                  series={[
-                    {
-                      data: [
-                        {
-                          id: 0,
-                          value: metrics.active,
-                          label: "Active Projects",
-                        },
-                        {
-                          id: 1,
-                          value: metrics.completed,
-                          label: "Completed Projects",
-                        },
-                        { id: 2, value: metrics.idle, label: "Out Of Budget" },
-                        {
-                          id: 3,
-                          value: metrics.outOfBudget,
-                          label: "Out Of Budget",
-                        },
-                        {
-                          id: 4,
-                          value: metrics.endingSoonCount,
-                          label: "Ending Soon",
-                        },
-                      ],
-                    },
-                  ]}
-                  width={120}
-                  height={120}
-                />
-                <AnimatedNumber
-                  number={metrics.projects}
-                  fontStyle={{ fontSize: 30 }}
-                />{" "}
-                Projects
-              </>
+            label={`Total Projects (${metrics.projects})`}
+            gauge={
+              <PieChart
+              style={{
+                transition:"all 1s ease-in-out"
+              }}
+                series={[
+                  {
+                    data: [
+                      {
+                        id: 0,
+                        value: metrics.active,
+                        label: "Active Projects",
+                      },
+                      {
+                        id: 1,
+                        value: metrics.completed,
+                        label: "Completed Projects",
+                      },
+                      {
+                        id: 2,
+                        value: metrics.outOfBudget,
+                        label: "Out Of Budget",
+                      },
+                      { id: 3, value: metrics.idle, label: "Idle Projects" },
+                      {
+                        id: 4,
+                        value: metrics.endingSoonCount,
+                        label: "Ending Soon",
+                      },
+                    ],
+                  },
+                ]}
+                width={120}
+                height={120}
+              />
             }
           />
           <StatCard
             icon={<TrendingUp />}
             label="Active"
-            value={
+            gauge={
               <Gauge
-                width={100}
-                height={100}
                 value={metrics.active}
-                valueMax={metrics.projects}
-                text={({ value, valueMax }) => `${value} / ${valueMax}`}
+                maxValue={metrics.projects}
+                color="green"
               />
             }
           />
         </div>
         {/* Big Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <StatCard
             icon={<FolderCheck />}
             label="Completed"
-            value={
+            gauge={
               <Gauge
-                width={100}
-                height={100}
                 value={metrics.completed}
-                valueMax={metrics.projects}
-                text={({ value, valueMax }) => `${value} / ${valueMax}`}
+                maxValue={metrics.projects}
+                color="green"
               />
             }
           />
           <StatCard
             icon={<Timer />}
             label="Idle"
-            value={
+            gauge={
               <Gauge
-                width={100}
-                height={100}
                 value={metrics.idle}
-                valueMax={metrics.projects}
-                text={({ value, valueMax }) => `${value} / ${valueMax}`}
+                maxValue={metrics.projects}
+                color="danger"
               />
             }
           />
           <StatCard
             icon={<AlertTriangle className="text-red-500" />}
             label="Out of Budget"
-            value={
+            gauge={
               <Gauge
-                width={100}
-                height={100}
                 value={metrics.outOfBudget}
-                valueMax={metrics.projects}
-                text={({ value, valueMax }) => `${value} / ${valueMax}`}
+                maxValue={metrics.projects}
+                color="danger"
               />
             }
           />
@@ -140,15 +128,15 @@ const Metrics = () => {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <StatCard
             label="Total Asssigned"
-            value={`${metrics.totalDebit}hrs`}
+            value={`${Math.round(metrics.totalDebit)}hrs`}
           />
           <StatCard
             label="Total Hrs Used"
-            value={`${metrics.totalCredit}hrs`}
+            value={`${Math.round(metrics.totalCredit)}hrs`}
           />
           <StatCard
             label="Avg Hrs Used"
-            value={`${metrics.avgCreditOverDebit}hrs`}
+            value={`${Math.round(parseFloat(metrics.avgCreditOverDebit))}hrs`}
           />
         </div>
 
@@ -156,13 +144,11 @@ const Metrics = () => {
         <StatCard
           className="w-full"
           label="Projects Ending Soon"
-          value={
+          gauge={
             <Gauge
-              width={100}
-              height={100}
               value={metrics.endingSoonCount}
-              valueMax={metrics.projects}
-              text={({ value, valueMax }) => `${value} / ${valueMax}`}
+              maxValue={metrics.projects}
+              color="danger"
             />
           }
         />

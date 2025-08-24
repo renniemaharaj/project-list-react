@@ -1,53 +1,60 @@
 import { format } from "date-fns";
 import type { ProjectMetaData, ProjectProps } from "./types";
-import { Avatar, Flex, Text } from "@radix-ui/themes";
-import { useState } from "react";
-import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
+import { Flex, Text } from "@radix-ui/themes";
+import { ChevronRightIcon } from "lucide-react";
 import { Button } from "@primer/react";
+import { useNavigationTransition } from "../../hooks/transition/useNavigationTransition";
+import Avatar from "@mui/material/Avatar";
 
 const Meta = ({
   project,
   projectMeta,
+  size = "sm",
 }: {
   project: ProjectProps;
   projectMeta: ProjectMetaData;
+  size?: "sm" | "lg";
 }) => {
-  const [isMinimized, setIsMinimized] = useState(true);
+  const { transitionTo } = useNavigationTransition();
   const formatDate = (timestamp: number) =>
     format(new Date(timestamp), "MMM dd, yyyy");
   return (
     <>
       {/* Collapse/Expand Button */}
-      <div className="w-full mb-2 overflow-auto">
-        <Button
-          size="small"
-          variant="default"
-          className="holographic-card w-full"
-          onClick={() => setIsMinimized(!isMinimized)}
-          aria-label={isMinimized ? "Expand panel" : "Collapse panel"}
-        >
-          {isMinimized ? <ChevronDownIcon /> : <ChevronUpIcon />}
-        </Button>
-      </div>
+      {size === "sm" && (
+        <div className="w-full overflow-auto">
+          <Button
+            size="small"
+            variant="default"
+            className={`holographic-card w-full`}
+            onClick={() => transitionTo(`/project/${project.ID}`)}
+            aria-label="Open this project"
+          >
+            <ChevronRightIcon />
+          </Button>
+        </div>
+      )}
 
       <Flex
         className={`${
-          isMinimized ? "h-0" : "h-20"
+          size === "lg" ? "h-20" : "h-0"
         } overflow-auto flex flex-col gap-3 transition-all`}
       >
         {/* Manager Info */}
         {projectMeta?.manager && (
-          <Flex className="items-center gap-2 mb-2">
-            <Avatar
-              src={projectMeta?.manager.profilePicture}
-              fallback={projectMeta.manager.firstName[0]}
-              alt={`${projectMeta.manager.firstName} ${projectMeta.manager.lastName}`}
-              className="w-10 h-10 border border-white"
-            />
+          <Flex className="items-center gap-2">
             <Text size="2" className="font-medium">
-              Project Manager: {(projectMeta as ProjectMetaData)?.manager.firstName}{" "}
+              Project Manager:{" "}
+              {(projectMeta as ProjectMetaData)?.manager.firstName}{" "}
               {projectMeta.manager.lastName}
             </Text>
+            <Avatar
+              src={projectMeta?.manager.profilePicture}
+              // fallback={projectMeta.manager.firstName}
+              alt={`${projectMeta.manager.firstName} ${projectMeta.manager.lastName}`}
+              className="!w-4 !h-4"
+              // size={"1"}
+            />
           </Flex>
         )}
 
@@ -56,7 +63,7 @@ const Meta = ({
           <Flex className="flex gap-3 flex-row">
             <span>
               <strong>ID:</strong>
-              <br /> {project.id}
+              <br /> {project.ID}
             </span>
             <span>
               <strong>Number:</strong>

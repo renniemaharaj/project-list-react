@@ -4,6 +4,7 @@ import type { CustomRoute, IndexRoute } from "./pages/page/routing";
 import CreateDocument from "./pages/page/views/create";
 
 import Base from "./pages/page/base";
+import Project from "./pages/page/views/project";
 
 export const protectedRoutes: CustomRoute[] = [];
 
@@ -16,7 +17,14 @@ export const publicRoutes: (CustomRoute | IndexRoute)[] = [
       </Base>
     ),
   },
-  { path: "*", element: <Missing /> },
+  {
+    path:"/project/:projectID",
+    element: (
+      <Base>
+        <Project />
+      </Base>
+    ),
+  },
   {
     path: "/create",
     element: (
@@ -25,4 +33,5 @@ export const publicRoutes: (CustomRoute | IndexRoute)[] = [
       </Base>
     ),
   },
+  { path: "*", element: <Missing /> },
 ];

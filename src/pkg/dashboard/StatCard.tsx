@@ -9,11 +9,13 @@ const StatCard = ({
   className,
   label,
   value,
+  gauge,
 }: {
   icon?: React.ReactNode;
   className?: string;
   label: string;
-  value: ReactNode;
+  value?: string;
+  gauge?:ReactNode
 }) => {
   const { theme } = useThemeContext();
 
@@ -37,6 +39,7 @@ const StatCard = ({
           {icon && <div className="text-gray-500">{icon}</div>}
           <p className="text-sm text-gray-500">{label}</p>
           <p className="text-2xl font-bold">{value}</p>
+          {gauge}
         </CardContent>
       </Card>
     </motion.div>

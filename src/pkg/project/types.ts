@@ -1,29 +1,29 @@
 export type ProjectProps = {
-  id: number;
+  ID: number;
   projectedStartDate: number;
   startDate: number;
   projectedEndDate: number;
   endDate: number;
   number: number;
   name: string;
-  managerId: number;
+  managerID: number;
   description: string;
 };
 
 export type Status = {
-  id: number;
+  ID: number;
   title: string;
   description: string;
-  projectId: number;
+  projectID: number;
   consultantID: number;
   dateCreated: number;
 };
 
 export type TimeEntry = {
-  id: number;
+  ID: number;
   title: string;
   description: string;
-  projectId: number;
+  projectID: number;
   consultantID: number;
   dateCreated: number;
   hours: number;
@@ -32,7 +32,7 @@ export type TimeEntry = {
 };
 
 export type Consultant = {
-  id: number;
+  ID: number;
   firstName: string;
   lastName: string;
   email: string;

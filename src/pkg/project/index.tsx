@@ -2,22 +2,33 @@ import { Avatar, Badge, Flex, Heading, Text } from "@radix-ui/themes";
 import type { ProjectMetaData, ProjectProps } from "./types";
 import { Spinner } from "@radix-ui/themes";
 import useQueryProjectMeta from "../../state/hooks/useQueryProjectMeta";
-import { Gauge } from "@mui/x-charts/Gauge";
+import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
 import { differenceInDays } from "date-fns";
 import Meta from "./Meta";
 import useThemeContext from "../../hooks/theme/useThemeContext";
 import Card from "@mui/material/Card";
 import AnimatedNumber from "../animatedNumber";
 import * as motion from "motion/react-client";
+import useGetProjectInURL from "../../state/hooks/useGetProjectInURL";
+import { PieChart } from "@mui/x-charts";
+import { useCallback } from "react";
 
-export default function ProjectCard({ project }: { project: ProjectProps }) {
+export default function ProjectCard({
+  project,
+  size = "sm",
+}: {
+  project: ProjectProps;
+  size?: "sm" | "lg";
+}) {
   const {
     data: projectMeta,
     isLoading,
     error,
   } = useQueryProjectMeta({
-    projectID: project.id,
+    projectID: project.ID,
   });
+
+  const getProjectInURL = useGetProjectInURL();
 
   const { theme } = useThemeContext();
 
@@ -41,104 +52,157 @@ export default function ProjectCard({ project }: { project: ProjectProps }) {
       new Date(projectMeta.manager?.updatedAt ?? Date.now())
     ) <= 7;
 
+  const getConsultantNameByID = useCallback(
+    (timeEntry: number) => {
+      const consultants = (projectMeta as ProjectMetaData).consultants;
+      const consultant = consultants?.find(
+        (consultant) => consultant.ID === timeEntry
+      );
+      return consultant?.firstName ?? "Unknown";
+    },
+    [projectMeta]
+  );
+
+  const URLParam = typeof getProjectInURL === "object";
+
+  if (URLParam && (getProjectInURL as ProjectProps).ID === project.ID)
+    if (size === "sm") return null;
+
   return (
-     <motion.div
-          initial={{ x: -100, opacity: 0 }}   // start below and hidden
-          animate={{ x: 0, opacity: 1 }}     // move up into place
-          transition={{
-            duration: 0.8,
-            delay: 0.5,
-            ease: [0, 0.71, 0.2, 1.01],
-          }}
-          >
-    <Card
-      variant="outlined"
-      className={`p-4 cursor-pointer transition-all w-full max-w-lg ${
-        recent ? "border-2 border-transparent" : " border-red-400"
-      } ${theme === "light" ? "!bg-blue-50" : ""}`}
+    <motion.div
+      className={`${size === "lg" && "!w-full"}`}
+      initial={{ x: -100, opacity: 0 }} // start below and hidden
+      animate={{ x: 0, opacity: 1 }} // move up into place
+      transition={{
+        duration: 0.8,
+        delay: 0.5,
+        ease: [0, 0.71, 0.2, 1.01],
+      }}
     >
-      <Flex className="flex flex-col gap-3">
-        {/* Header */}
-        <div className="flex items-start justify-between">
-          <Heading className="text-xl font-semibold">{project.name}</Heading>
-          <Badge color={outOfBudget ? "red" : "green"}>
-            {/* {outOfBudget ? "OOB" : "Healthy"} */}
-          </Badge>
-        </div>
-
-        {/* Metrics / Gauge */}
-        <Flex className="flex flex-row items-center justify-between mb-4">
-          <div className="flex gap-4">
-            <div className="flex flex-col">
-              <span className="text-sm font-medium text-blue-600">Hrs Assigned</span>
-              <span className="text-lg font-semibold">
-                <AnimatedNumber
-                  number={debit}
-                  fontStyle={{ fontSize: 30, color: "green" }}
-                />
-                hrs
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-medium text-purple-600">
-                Hrs Used
-              </span>
-              <span>
-                <AnimatedNumber
-                  number={credit}
-                  fontStyle={{
-                    fontSize: 30,
-                    color: credit > debit ? "red" : "green",
-                  }}
-                />
-                hrs
-              </span>
-            </div>
+      <Card
+        variant="outlined"
+        className={`p-4 transition-all w-full ${
+          recent ? "border-2 border-transparent" : " border-red-400"
+        } ${theme === "light" ? "!bg-blue-50" : ""}`}
+      >
+        <Flex className="flex flex-col gap-3">
+          {/* Header */}
+          <div className="flex items-start justify-between">
+            <Heading className="text-xl font-semibold">{project.name}</Heading>
+            <Badge color={outOfBudget ? "red" : "green"}>
+              {/* {outOfBudget ? "OOB" : "Healthy"} */}
+            </Badge>
           </div>
-          <Gauge
-            width={100}
-            height={100}
-            value={credit}
-            valueMax={debit || 1}
-            text={({ value, valueMax }) => `${value} / ${valueMax}`}
-          />
-        </Flex>
 
-        <Text size="2" className="text-sm text-gray-600">
-          <span>
-            <strong>Description</strong>
-            <br /> {project.description}
-          </span>
-        </Text>
+          {/* Metrics / Gauge */}
+          <Flex className="flex flex-row items-center justify-between mb-4">
+            <div className="flex gap-4">
+              <div className="flex flex-col">
+                <span className="text-sm font-medium text-blue-600">
+                  Hrs Assigned
+                </span>
+                <span className="text-lg font-semibold">
+                  <AnimatedNumber
+                    number={debit}
+                    fontStyle={{ fontSize: 30, color: "green" }}
+                  />
+                  hrs
+                </span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm font-medium text-purple-600">
+                  Hrs Used
+                </span>
+                <span>
+                  <AnimatedNumber
+                    number={credit}
+                    fontStyle={{
+                      fontSize: 30,
+                      color: credit > debit ? "red" : "green",
+                    }}
+                  />
+                  hrs
+                </span>
+              </div>
+            </div>
+            {size === "sm" ? (
+              <Gauge
+                width={100}
+                height={100}
+                value={credit}
+                valueMax={debit || 1}
+                text={({ value, valueMax }) =>
+                  `${Math.round(value ?? 0)} / ${Math.round(valueMax)}`
+                }
+                sx={{
+                  [`& .${gaugeClasses.valueArc}`]: {
+                    fill: credit > debit ? "red" : "#52b202",
+                  },
+                  [`& .${gaugeClasses.referenceArc}`]: {
+                    fill: "#ccc",
+                  },
+                }}
+              />
+            ) : (
+              typeof projectMeta === "object" && (
+                <PieChart
+                  series={[
+                    {
+                      data: (projectMeta as ProjectMetaData)?.timeEntries
+                        ?.filter((timeEntry) => timeEntry.type !== "credit")
+                        .map((timeEntry) => ({
+                          id: timeEntry.ID,
+                          value: Math.round(timeEntry.hours),
+                          label: getConsultantNameByID(timeEntry.consultantID),
+                        })),
+                    },
+                  ]}
+                  width={120}
+                  height={120}
+                />
+              )
+            )}
+          </Flex>
 
-        <Meta project={project} projectMeta={projectMeta as ProjectMetaData} />
-
-        {isLoading ? (
-          <div className="flex justify-center py-6">
-            <Spinner className="w-6 h-6 text-blue-500" />
-          </div>
-        ) : error ? (
-          <Text size="2" className="text-sm text-red-600">
-            Failed to load project metrics
+          <Text size="2" className="text-sm text-gray-600">
+            <span>
+              <strong>Description</strong>
+              <br /> {project.description}
+            </span>
           </Text>
-        ) : (
-          <>
-            {/* Consultants */}
-            <div className="flex -space-x-3">
-              {(projectMeta as ProjectMetaData)?.consultants?.map((c) => (
-                <Avatar
-                  key={c.id}
-                  src={c.profilePicture}
-                  alt={`${c.firstName} ${c.lastName}`}
-                  fallback={c.firstName[0]}
-                  className="border border-white w-10 h-10"
-                />
-              ))}
+
+          <Meta
+            size={size}
+            project={project}
+            projectMeta={projectMeta as ProjectMetaData}
+          />
+
+          {isLoading ? (
+            <div className="flex justify-center py-6">
+              <Spinner className="w-6 h-6 text-blue-500" />
             </div>
-          </>
-        )}
-      </Flex>
-    </Card>
+          ) : error ? (
+            <Text size="2" className="text-sm text-red-600">
+              Failed to load project metrics
+            </Text>
+          ) : (
+            <>
+              {/* Consultants */}
+              <div className="flex -space-x-3">
+                {(projectMeta as ProjectMetaData)?.consultants?.map((c) => (
+                  <Avatar
+                    key={c.ID}
+                    src={c.profilePicture}
+                    alt={`${c.firstName} ${c.lastName}`}
+                    fallback={c.firstName[0]}
+                    className="border border-white w-10 h-10"
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </Flex>
+      </Card>
     </motion.div>
   );
 }

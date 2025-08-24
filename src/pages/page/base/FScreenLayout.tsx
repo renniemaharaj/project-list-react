@@ -72,7 +72,7 @@ export const FScreenLayout: React.FC<FullScreenLayoutProps> = ({
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto p-2">{content}</div>
+        <div className="flex-1 overflow-y-auto !justify-center p-2">{content}</div>
       </Box>
 
       {/* Footer */}

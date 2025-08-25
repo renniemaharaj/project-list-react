@@ -1,10 +1,10 @@
-import Index from "./pages/page/index";
-import Missing from "./pages/page/views/missing";
+import Index from "./pages/index/index";
+import Missing from "./pages/missing";
 import type { CustomRoute, IndexRoute } from "./pages/page/routing";
-import CreateDocument from "./pages/page/views/create";
-
-import Base from "./pages/page/base";
-import Project from "./pages/page/views/project";
+import CreateProject from "./pages/create";
+import ProjectRoute from "./pages/project";
+import Layout from "./pages/page/Layout";
+import Discovery from "./pages/discovery";
 
 export const protectedRoutes: CustomRoute[] = [];
 
@@ -12,26 +12,41 @@ export const publicRoutes: (CustomRoute | IndexRoute)[] = [
   {
     index: true,
     element: (
-      <Base>
+      <Layout>
         <Index />
-      </Base>
+      </Layout>
+    ),
+  },
+   {
+    path: "/search/:searchQuery",
+    element: (
+      <Layout>
+        <Discovery />
+      </Layout>
     ),
   },
   {
-    path:"/project/:projectID",
+    path: "/project/:projectID",
     element: (
-      <Base>
-        <Project />
-      </Base>
+      <Layout>
+        <ProjectRoute />
+      </Layout>
     ),
   },
   {
     path: "/create",
     element: (
-      <Base>
-        <CreateDocument />
-      </Base>
+      <Layout>
+        <CreateProject />
+      </Layout>
     ),
   },
-  { path: "*", element: <Missing /> },
+  {
+    path: "*",
+    element: (
+      <Layout>
+        <Missing />
+      </Layout>
+    ),
+  },
 ];

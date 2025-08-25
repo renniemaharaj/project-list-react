@@ -5,24 +5,30 @@ import "@primer/react-brand/lib/css/main.css";
 import "@primer/primitives/dist/css/functional/themes/light.css";
 import "@primer/primitives/dist/css/functional/themes/dark.css";
 
-import { ThemeProvider as PrimerThemeProvider, BaseStyles } from "@primer/react";
+import {
+  ThemeProvider as PrimerThemeProvider,
+  BaseStyles,
+} from "@primer/react";
 import { Theme as RadixTheme } from "@radix-ui/themes";
-import { createTheme, ThemeProvider as MUIThemeProvider } from "@mui/material/styles";
+import {
+  createTheme,
+  ThemeProvider as MUIThemeProvider,
+} from "@mui/material/styles";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { AuthRouter } from "./pkg/firebase/auth/AuthRouter";
 import { protectedRoutesFunc, publicRoutesFunc } from "./pages/page/routing";
-import EBoundary from "./pages/page/views/eBoundary";
+import ErrorFallback from "./pages/error";
 
-import { ThemeProvider as LocalThemeProvider } from "./hooks/theme/ThemeProvider";
-import useThemeContext from "./hooks/theme/useThemeContext";
+import { ThemeProvider as LocalThemeProvider } from "./state/hooks/theme/ThemeProvider";
+import useThemeContext from "./state/hooks/theme/useThemeContext";
 
 function App() {
   return (
     // Local context: stores and provides "light" | "dark"
     <LocalThemeProvider>
-      <ErrorBoundary FallbackComponent={EBoundary}>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
         <AppShell />
       </ErrorBoundary>
     </LocalThemeProvider>

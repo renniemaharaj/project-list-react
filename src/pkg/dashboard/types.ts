@@ -7,6 +7,6 @@ export type DashboardMetrics = {
   outOfBudget: number;
   totalDebit: number;
   totalCredit: number;
-  avgCreditOverDebit: string; // or number if backend doesn’t stringify
+  avgCreditOverDebit: number;
   endingSoonCount: number;
 };

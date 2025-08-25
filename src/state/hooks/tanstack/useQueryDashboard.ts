@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { DashboardMetrics } from "../../../pkg/dashboard/types";
 import { queryDomains } from "./config";
 
+// useQueryDashboard queries domain api for computed dashboard
 const useQueryDashboard = () => {
   const query = useQuery<DashboardMetrics>({
     queryKey: ["dashboard"],
@@ -14,7 +15,7 @@ const useQueryDashboard = () => {
     staleTime: 1000 * 60 * 5,
   });
 
-  return { query };
+  return { data: query.data, isLoading: query.isLoading, error: query.error };
 };
 
 export default useQueryDashboard;

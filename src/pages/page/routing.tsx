@@ -1,5 +1,5 @@
 import { Route } from "react-router-dom";
-import Suspended from "./views/suspended";
+import Suspended from "../suspended";
 import { protectedRoutes, publicRoutes } from "../../routes";
 
 export interface Primitve {

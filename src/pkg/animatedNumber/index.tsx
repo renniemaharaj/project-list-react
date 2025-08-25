@@ -10,7 +10,7 @@ const AnimatedNumber = ({number, fontStyle}:{number:number, fontStyle: CSSProper
         // className={styles.container}
         transitions={(index) => ({
           type: "keyframes",
-          duration: index + 1,
+          duration: index + 0,
         })}
         animateToNumber={number}
         fontStyle={fontStyle}

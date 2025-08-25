@@ -5,7 +5,7 @@ interface ErrorFallbackProps {
   resetErrorBoundary: () => void;
 }
 
-const EBoundary = ({ error, resetErrorBoundary }: ErrorFallbackProps) => {
+const ErrorFallback = ({ error, resetErrorBoundary }: ErrorFallbackProps) => {
   console.log(error);
   return (
     <div className="flex p-2 gap-1 flex-col w-full items-center">
@@ -19,4 +19,4 @@ const EBoundary = ({ error, resetErrorBoundary }: ErrorFallbackProps) => {
   );
 };
 
-export default EBoundary;
+export default ErrorFallback;

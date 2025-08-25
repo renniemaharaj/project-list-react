@@ -1,18 +1,18 @@
 import { memo, type ReactNode } from "react";
-import SubNavBar from "../nav/SubNavBar";
+import SubdomainNavbar from "../subdomainNavbar/SubNavBar";
 import { Box } from "@primer/react-brand";
 import CreateFormDialog from "../forms/CreateDialog";
 import SidePane from "../sidepane/SidePane";
 import { FScreenLayout } from "./FScreenLayout";
 
-const Base = ({ children }: { children?: ReactNode }) => {
+const Layout = ({ children }: { children?: ReactNode }) => {
   return (
     <Box>
       {/** Import create form dialog */}
       <CreateFormDialog />
       {/* <SplitPageLayout> */}
       <FScreenLayout
-        header={<SubNavBar />}
+        header={<SubdomainNavbar />}
         side={<SidePane />}
         content={children}
       />
@@ -20,4 +20,4 @@ const Base = ({ children }: { children?: ReactNode }) => {
   );
 };
 
-export default memo(Base);
+export default memo(Layout);

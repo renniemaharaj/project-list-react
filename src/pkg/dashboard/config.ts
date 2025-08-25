@@ -9,6 +9,6 @@ export const skeletonDashboardMetrics: DashboardMetrics = {
   totalDebit: 0,
   totalCredit: 0,
   outOfBudget: 0,
-  avgCreditOverDebit: "",
+  avgCreditOverDebit: 0,
   endingSoonCount: 0,
 };

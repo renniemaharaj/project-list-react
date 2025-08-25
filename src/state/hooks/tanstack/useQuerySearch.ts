@@ -1,17 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { queryDomains } from "./config";
-import { useAtomValue } from "jotai";
-import { projectExplorerPageNumberAtom } from "../../app.atoms";
+import { useParams } from "react-router-dom";
 
-// useQueryProjects queries domain api for projects using pagination
-const useQueryProjects = () => {
+// useQuerySearch queries domain api for projects using pagination
+const useQuerySearch = () => {
   // pagination is handled through a jotai atom
-  const projectExplorerPageNumber = useAtomValue(projectExplorerPageNumberAtom);
+  const domainSearchQuery  = useParams().searchQuery
   const query = useQuery<number[]>({
-    queryKey: ["projects", projectExplorerPageNumber],
+    queryKey: ["projects", domainSearchQuery],
     queryFn: async () => {
       const res = await fetch(
-        `${queryDomains.base}/projects/page/${projectExplorerPageNumber}`
+        `${queryDomains.base}/projects/search/${domainSearchQuery}`
       );
       if (!res.ok) throw new Error("Failed to fetch projects");
       return res.json() as Promise<number[]>;
@@ -22,4 +21,4 @@ const useQueryProjects = () => {
   return { data: query.data, error: query.error, isLoading: query.isLoading };
 };
 
-export default useQueryProjects;
+export default useQuerySearch;

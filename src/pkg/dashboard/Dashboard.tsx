@@ -1,44 +1,36 @@
+import Gauge from "./Gauge";
+import StatCard from "./StatCard";
 import {
   AlertTriangle,
+  Briefcase,
   FolderCheck,
   Timer,
   TrendingUp,
-  Briefcase,
 } from "lucide-react";
-
-import useQueryDashboard from "../../state/hooks/tanstack/useQueryDashboard";
-import StatCard from "./StatCard";
 import { PieChart } from "@mui/x-charts";
-import { useEffect, useState } from "react";
-import { skeletonDashboardMetrics } from "./config";
 import type { DashboardMetrics } from "./types";
-import Gauge from "./Gauge";
+import * as motion from "motion/react-client";
 
-const Metrics = () => {
-  const { query } = useQueryDashboard();
-  const [metrics, setMetrics] = useState<DashboardMetrics>();
-
-  useEffect(() => {
-    if (query.isLoading) {
-      setMetrics(skeletonDashboardMetrics);
-    } else {
-      if (query.data) setMetrics(query.data);
-    }
-  }, [query]);
-
-  if (query.error)
-    return <p className="text-red-500">Error loading dashboard.</p>;
-  if (!metrics) return null;
-
+const DashboardComp = ({ dashboard }: { dashboard: DashboardMetrics }) => {
   return (
     <>
-      <h1 className="text-2xl font-bold">Hello, Rennie </h1>
+      <motion.div
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{
+          duration: 0.8,
+          delay: 0.2,
+          ease: [0, 0.71, 0.2, 1.01],
+        }}
+      >
+        <h1 className="text-2xl font-bold">Hello, Rennie </h1>
+      </motion.div>
       <div className="p-6 space-y-6">
         {/* Big Total Projects Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4">
           <StatCard
             icon={<Briefcase />}
-            label={`Total Projects (${metrics.projects})`}
+            label={`Total Projects (${dashboard.projects})`}
             gauge={
               <PieChart
                 style={{
@@ -49,30 +41,30 @@ const Metrics = () => {
                     data: [
                       {
                         id: 0,
-                        value: metrics.active,
+                        value: dashboard.active,
                         label: "Active Projects",
                       },
                       {
                         id: 1,
-                        value: metrics.completed,
+                        value: dashboard.completed,
                         label: "Completed Projects",
                       },
                       {
                         id: 2,
-                        value: metrics.outOfBudget,
+                        value: dashboard.outOfBudget,
                         label: "Out Of Budget",
                       },
-                      { id: 3, value: metrics.idle, label: "Idle Projects" },
+                      { id: 3, value: dashboard.idle, label: "Idle Projects" },
                       {
                         id: 4,
-                        value: metrics.endingSoonCount,
+                        value: dashboard.endingSoonCount,
                         label: "Ending Soon",
                       },
                     ],
                   },
                 ]}
-                width={120}
-                height={120}
+                width={130}
+                height={130}
               />
             }
           />
@@ -81,8 +73,8 @@ const Metrics = () => {
             label="Active"
             gauge={
               <Gauge
-                value={metrics.active}
-                maxValue={metrics.projects}
+                value={dashboard.active}
+                maxValue={dashboard.projects}
                 color="green"
               />
             }
@@ -95,8 +87,8 @@ const Metrics = () => {
             label="Completed"
             gauge={
               <Gauge
-                value={metrics.completed}
-                maxValue={metrics.projects}
+                value={dashboard.completed}
+                maxValue={dashboard.projects}
                 color="green"
               />
             }
@@ -106,8 +98,8 @@ const Metrics = () => {
             label="Idle"
             gauge={
               <Gauge
-                value={metrics.idle}
-                maxValue={metrics.projects}
+                value={dashboard.idle}
+                maxValue={dashboard.projects}
                 color="danger"
               />
             }
@@ -117,8 +109,8 @@ const Metrics = () => {
             label="Out of Budget"
             gauge={
               <Gauge
-                value={metrics.outOfBudget}
-                maxValue={metrics.projects}
+                value={dashboard.outOfBudget}
+                maxValue={dashboard.projects}
                 color="danger"
               />
             }
@@ -129,15 +121,15 @@ const Metrics = () => {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <StatCard
             label="Total Asssigned"
-            value={`${Math.round(metrics.totalDebit)}hrs`}
+            value={`${parseFloat(dashboard.totalDebit.toFixed(2))}hrs`}
           />
           <StatCard
             label="Total Hrs Used"
-            value={`${Math.round(metrics.totalCredit)}hrs`}
+            value={`${parseFloat(dashboard.totalCredit.toFixed(2))}hrs`}
           />
           <StatCard
             label="Avg Hrs Used"
-            value={`${Math.round(parseFloat(metrics.avgCreditOverDebit))}hrs`}
+            value={`${Math.round(dashboard.avgCreditOverDebit)}hrs`}
           />
         </div>
 
@@ -147,8 +139,8 @@ const Metrics = () => {
           label="Projects Ending Soon"
           gauge={
             <Gauge
-              value={metrics.endingSoonCount}
-              maxValue={metrics.projects}
+              value={dashboard.endingSoonCount}
+              maxValue={dashboard.projects}
               color="danger"
             />
           }
@@ -158,4 +150,4 @@ const Metrics = () => {
   );
 };
 
-export default Metrics;
+export default DashboardComp;

@@ -1,7 +1,7 @@
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import React, { type ReactNode } from "react";
-import useThemeContext from "../../hooks/theme/useThemeContext";
+import useThemeContext from "../../state/hooks/theme/useThemeContext";
 import * as motion from "motion/react-client";
 
 const StatCard = ({

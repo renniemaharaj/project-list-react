@@ -3,7 +3,9 @@ import type { ProjectProps } from "../../../pkg/project/types";
 import { queryDomains } from "./config";
 import { useState } from "react";
 
+// useQueryProject queries domain api for a project by projectID
 const useQueryProject = () => {
+  // Dynamic setProject hook
   const [projectID, setProjectID] = useState<number>();
 
   const query = useQuery<ProjectProps>({
@@ -17,7 +19,7 @@ const useQueryProject = () => {
     enabled: !!projectID,
   });
 
-  return { query, setProjectID };
+  return { isLoading:query.isLoading, error:query.error, data:query.data, setProjectID };
 };
 
 export default useQueryProject;

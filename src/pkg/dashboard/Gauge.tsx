@@ -17,13 +17,10 @@ const Gauge = ({
   return (
     <M
       key={key}
-      width={100}
-      height={100}
+      width={110}
+      height={110}
       value={value}
       valueMax={maxValue}
-      style={{
-        transition:"all 1s ease-in-out"
-      }}
       text={({ value, valueMax }) => `${value} / ${valueMax}`}
       sx={{
         [`& .${gaugeClasses.valueArc}`]: {

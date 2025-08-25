@@ -3,10 +3,10 @@ import type { ProjectMetaData, ProjectProps } from "./types";
 import { Flex, Text } from "@radix-ui/themes";
 import { ChevronRightIcon } from "lucide-react";
 import { Button } from "@primer/react";
-import { useNavigationTransition } from "../../hooks/transition/useNavigationTransition";
 import Avatar from "@mui/material/Avatar";
+import { useNavigationTransition } from "../../state/hooks/transition/useNavigationTransition";
 
-const Meta = ({
+const ProjectMeta = ({
   project,
   projectMeta,
   size = "sm",
@@ -16,8 +16,10 @@ const Meta = ({
   size?: "sm" | "lg";
 }) => {
   const { transitionTo } = useNavigationTransition();
-  const formatDate = (timestamp: number) =>
-    format(new Date(timestamp), "MMM dd, yyyy");
+  const formatDate = (timestamp: number) => {
+    if (timestamp) return format(new Date(timestamp), "MMM dd, yyyy");
+  };
+  
   return (
     <>
       {/* Collapse/Expand Button */}
@@ -25,7 +27,7 @@ const Meta = ({
         <div className="w-full overflow-auto">
           <Button
             size="small"
-            variant="default"
+            variant="link"
             className={`holographic-card w-full`}
             onClick={() => transitionTo(`/project/${project.ID}`)}
             aria-label="Open this project"
@@ -52,8 +54,7 @@ const Meta = ({
               src={projectMeta?.manager.profilePicture}
               // fallback={projectMeta.manager.firstName}
               alt={`${projectMeta.manager.firstName} ${projectMeta.manager.lastName}`}
-              className="!w-4 !h-4"
-              // size={"1"}
+              // className="!w-4 !h-4"
             />
           </Flex>
         )}
@@ -100,4 +101,4 @@ const Meta = ({
   );
 };
 
-export default Meta;
+export default ProjectMeta;

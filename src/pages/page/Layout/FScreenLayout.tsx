@@ -42,10 +42,12 @@ export const FScreenLayout: React.FC<FullScreenLayoutProps> = ({
   );
 
   const incrementPage = () => {
-    setProjectExplorerPageNumber((prev) => prev + 1);
-
+    // Animate scroll up
     if (flexRef.current)
-      flexRef.current.scrollTo({ top: 0, behavior: "smooth"});
+      flexRef.current.scrollTo({ top: 0, behavior: "smooth" });
+
+    // Only after increment
+    setTimeout(() => setProjectExplorerPageNumber((prev) => prev + 1), 1000);
   };
 
   return (
@@ -69,12 +71,16 @@ export const FScreenLayout: React.FC<FullScreenLayoutProps> = ({
             width: isCollapsed ? `${paneCW[0]}rem` : `${paneCW[1]}rem`,
           }}
         >
-          <div className="h-full w-full scroll-smooth p-2 overflow-x-hidden overflow-y-auto">
+          <div
+            ref={flexRef}
+            className="h-full w-full scroll-smooth p-2 overflow-x-hidden overflow-y-auto"
+          >
             {/* Collapse/Expand Button */}
-            <div ref={flexRef} className="w-full mb-2 overflow-auto">
+            <div className="w-full mb-2 overflow-auto">
               <Button
                 size="small"
-                variant="invisible"
+                // variant="invisible"
+                variant="link"
                 className="holographic-card w-full"
                 onClick={() => setIsCollapsed(!isCollapsed)}
                 aria-label={isCollapsed ? "Expand panel" : "Collapse panel"}
@@ -90,7 +96,8 @@ export const FScreenLayout: React.FC<FullScreenLayoutProps> = ({
                 <br />
                 <Button
                   size="small"
-                  variant="invisible"
+                  // variant="invisible"
+                  variant="link"
                   className="holographic-card w-full"
                   onClick={incrementPage}
                   aria-label={"Next Page"}

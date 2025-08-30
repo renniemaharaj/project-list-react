@@ -1,36 +1,34 @@
-import { Flex, Heading } from "@radix-ui/themes";
+import { Flex, Heading} from "@radix-ui/themes";
 import useQuerySearch from "../../state/hooks/tanstack/useQuerySearch";
 import * as motion from "motion/react-client";
 import { Blankslate } from "@primer/react/experimental";
-import { SearchIcon } from "lucide-react";
+import { SearchIcon, LayoutGrid, StretchHorizontal } from "lucide-react";
 import Project from "../../pkg/project";
 import { projectDiscoveryPageNumberAtom } from "../../state/app.atoms";
 import { useAtom } from "jotai";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@primer/react";
 
 const Discovery = () => {
   const { data, isLoading, error } = useQuerySearch();
 
+  const [renderView, setRenderView] = useState<"default" | "full-w">("default");
+
   const [projectDiscoveryPageNumber, setProjectDiscoveryPageNumber] = useAtom(
     projectDiscoveryPageNumberAtom
   );
 
-  // const { theme } = useThemeContext();
   const flexRef = useRef<HTMLDivElement>(null);
 
   const incrementPage = () => {
-    // Animate scroll up
     if (flexRef.current)
       flexRef.current.scrollTo({ top: 0, behavior: "smooth" });
 
-    // Only after increment
     setTimeout(() => setProjectDiscoveryPageNumber((prev) => prev + 1), 1000);
   };
-  // Component returns an error text instead of results if error
+
   if (error) return <p className="text-red-500">Error loading results.</p>;
 
-  // Component returns a loading text instead of results on loading
   if (isLoading)
     return (
       <Blankslate>
@@ -69,13 +67,37 @@ const Discovery = () => {
           <Heading className="text-xl font-semibold">
             {data.length} Results: Page ({projectDiscoveryPageNumber + 1})
           </Heading>
-          <Flex className="flex flex-1 flex-row gap-1 !w-fit items-center justify-end">
+
+          <Flex className="flex flex-row gap-1 items-center">
+            {/* View Controls */}
+            <Button
+              // size="1"
+              // variant="soft"
+              size="small"
+              aria-label="Default View"
+              onClick={() => setRenderView("default")}
+              disabled={renderView === "default"}
+            >
+              <LayoutGrid className="!w-2 !h-2"/>
+            </Button>
+
+            <Button
+              // size="1"
+              // variant="soft"
+              size="small"
+              aria-label="Full Width View"
+              onClick={() => setRenderView("full-w")}
+              disabled={renderView === "full-w"}
+            >
+              <StretchHorizontal  className="!w-2 !h-2" />
+            </Button>
+
+            {/* Pagination Controls */}
             {projectDiscoveryPageNumber > 0 && (
               <Button
-                size="small"
-                // variant="invisible"
+                // size="small"
                 variant="link"
-                className="holographic-card w-full"
+                className="holographic-card"
                 onClick={() => setProjectDiscoveryPageNumber(0)}
                 aria-label={"First Page"}
               >
@@ -84,10 +106,9 @@ const Discovery = () => {
             )}
 
             <Button
-              size="small"
-              // variant="invisible"
+              // size=""
               variant="link"
-              className="holographic-card w-full"
+              className="holographic-card"
               onClick={incrementPage}
               aria-label={"Next Page"}
             >
@@ -95,14 +116,22 @@ const Discovery = () => {
             </Button>
           </Flex>
         </Flex>
-        {/* </Card> */}
       </motion.div>
+
+      {/* Project Listing */}
       <Flex
         ref={flexRef}
-        className="flex !flex-row flex-wrap justify-start gap-2"
+        className={`flex flex-row flex-wrap justify-start gap-2 transition-all duration-300 ${
+          renderView === "full-w" ? "!flex-col" : "!flex-row"
+        }`}
       >
         {data.map((projectID) => (
-          <Project projectID={projectID} size="sm" />
+          <Project
+            key={projectID}
+            projectID={projectID}
+            detailed={renderView==="full-w"}
+            size={renderView === "full-w" ? "lg" : "sm"}
+          />
         ))}
       </Flex>
     </Flex>

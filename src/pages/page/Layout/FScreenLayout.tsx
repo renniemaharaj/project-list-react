@@ -30,7 +30,7 @@ export const FScreenLayout: React.FC<FullScreenLayoutProps> = ({
   content,
 }) => {
   // Side panel collapsed width and expanded width in rem units
-  const [paneCW] = useState<[number, number]>([4.5, 25]);
+  const [paneCW] = useState<[number, number]>([4, 25]);
 
   // Track collapsed state of side panel
   const [isCollapsed, setIsCollapsed] = useState(false);

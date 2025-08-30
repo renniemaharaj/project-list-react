@@ -6,9 +6,11 @@ import ProjectSkeleton from "./ProjectSkeleton";
 const Project = ({
   projectID,
   size,
+  detailed,
 }: {
   projectID: number;
-  size: "sm" | "lg";
+  size?: "sm" | "lg";
+  detailed?: boolean
 }) => {
   const { isLoading, error, data, setProjectID } = useQueryProject();
 
@@ -28,7 +30,7 @@ const Project = ({
   // Component returns an error text instead of dashboard if error
   if (!data) return <p className="text-red-500">Error getting project data.</p>;
 
-  return <ProjectCard project={data} size={size} />;
+  return <ProjectCard project={data} detailed={detailed} size={size} />;
 };
 
 export default Project;

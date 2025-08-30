@@ -22,7 +22,7 @@ const ProjectRoute = () => {
   if (!projectID)
     return <p className="text-red-500">Invalid project ID in URL.</p>;
 
-  return <Project projectID={projectID} size="lg" />;
+  return <Project projectID={projectID} size="lg" detailed={true} />;
 };
 
 export default ProjectRoute;

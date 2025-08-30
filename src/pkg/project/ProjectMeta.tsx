@@ -1,14 +1,14 @@
 import { format } from "date-fns";
 import type { ProjectMetaData, ProjectProps } from "./types";
-import { Flex, Text } from "@radix-ui/themes";
+import { Flex } from "@radix-ui/themes";
 import { ChevronRightIcon } from "lucide-react";
 import { Button } from "@primer/react";
-import Avatar from "@mui/material/Avatar";
+// import Avatar from "@mui/material/Avatar";
 import { useNavigationTransition } from "../../state/hooks/transition/useNavigationTransition";
 
 const ProjectMeta = ({
   project,
-  projectMeta,
+  // projectMeta,
   size = "sm",
 }: {
   project: ProjectProps;
@@ -43,7 +43,7 @@ const ProjectMeta = ({
         } overflow-auto flex flex-col gap-3 transition-all`}
       >
         {/* Manager Info */}
-        {projectMeta?.manager && (
+        {/* {projectMeta?.manager && (
           <Flex className="items-center gap-2">
             <Text size="2" className="font-medium">
               Project Manager:{" "}
@@ -57,7 +57,7 @@ const ProjectMeta = ({
               // className="!w-4 !h-4"
             />
           </Flex>
-        )}
+        )} */}
 
         {/* Project Basic Info */}
         <div className="flex flex-wrap gap-4 text-sm text-gray-600">

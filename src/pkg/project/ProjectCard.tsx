@@ -11,15 +11,17 @@ import * as motion from "motion/react-client";
 import { PieChart } from "@mui/x-charts";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Token } from "@primer/react";
-import Avatar from "@mui/material/Avatar";
+// import Avatar from "@mui/material/Avatar";
 import TimeEntries from "./TimeEntries";
 
 export default function ProjectCard({
   project,
   size = "sm",
+  detailed = false
 }: {
   project: ProjectProps;
   size?: "sm" | "lg";
+  detailed?: boolean
 }) {
   // Use tanstack query for querying project's meta
   const { data, error, isLoading, setProjectID } = useQueryProjectMeta();
@@ -29,7 +31,7 @@ export default function ProjectCard({
   const { theme } = useThemeContext();
 
   // Track visibility
-  const cardRef = useRef<HTMLDivElement | null>(null);
+  const parentRef = useRef<HTMLDivElement | null>(null);
   const [inView, setInView] = useState(false);
 
   // Calculate accumulated debit
@@ -67,10 +69,10 @@ export default function ProjectCard({
       },
       { threshold: 0.1 } // 20% visible triggers load
     );
-    if (cardRef.current) observer.observe(cardRef.current);
+    if (parentRef.current) observer.observe(parentRef.current);
 
     return () => observer.disconnect();
-  }, [cardRef]);
+  }, [parentRef]);
 
   // Trigger meta query only when visible
   useEffect(() => {
@@ -113,17 +115,17 @@ export default function ProjectCard({
   }
 
   return (
-    <>
-      {size === "lg" && (
+    <div ref={parentRef}>
+      {detailed && (
         <TimeEntries
-          onDelete={() => {}}
+          // onDelete={() => {}}
           timeEntries={projectMeta?.timeEntries}
           consultants={projectMeta?.consultants}
         />
       )}
 
       <motion.div
-        className={`${size === "lg" ? "!w-full" : "max-w-[22rem]"}`}
+        className={`${size === "lg" ? "!w-full" : "max-w-[21rem]"}`}
         initial={{ x: -100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{
@@ -133,7 +135,7 @@ export default function ProjectCard({
         }}
       >
         <Card
-          ref={cardRef}
+          
           variant="outlined"
           className={`p-4 transition-all w-full ${
             !projectMeta && "animate-pulse"
@@ -182,7 +184,7 @@ export default function ProjectCard({
                   </span>
                 </div>
               </div>
-              {size === "sm" ? (
+              {!detailed ? (
                 <Gauge
                   width={110}
                   height={110}
@@ -228,7 +230,7 @@ export default function ProjectCard({
             </Text>
 
             <ProjectMeta
-              size={size}
+              size={detailed ? "lg" : "sm"}
               project={project}
               projectMeta={projectMeta as ProjectMetaData}
             />
@@ -244,7 +246,7 @@ export default function ProjectCard({
             ) : (
               <>
                 {/* Consultants */}
-                <div className="flex -space-x-3">
+                {/* <div className="flex -space-x-3">
                   {projectMeta?.consultants?.map((c) => (
                     <Avatar
                       key={c.ID}
@@ -252,12 +254,12 @@ export default function ProjectCard({
                       alt={`${c.firstName} ${c.lastName}`}
                     />
                   ))}
-                </div>
+                </div> */}
               </>
             )}
           </Flex>
         </Card>
       </motion.div>
-    </>
+    </div>
   );
 }

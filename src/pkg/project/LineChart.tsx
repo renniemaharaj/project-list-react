@@ -7,56 +7,69 @@ type Props = {
 };
 
 const TimeEntriesLineChart = ({ timeEntries, consultants }: Props) => {
-  // Helper to map consultantID → consultant name
   const getConsultantName = (id: number) =>
     consultants.find((c) => c.ID === id)?.firstName ?? `Consultant ${id}`;
 
-  // Sort entries by date to ensure timeline order
+  // Sort entries by date
   const sortedEntries = [...timeEntries].sort(
     (a, b) => a.entryDate - b.entryDate
   );
 
-  // Extract unique dates
+  // Collect unique dates
   const uniqueDates = Array.from(
-    new Set(
-      sortedEntries.map((e) => new Date(e.entryDate).toLocaleDateString())
-    )
+    new Set(sortedEntries.map((e) => new Date(e.entryDate).toDateString()))
   );
 
-  // Group time entries by consultant
-  const consultantSeries = consultants.map((consultant) => {
-    const seriesData = uniqueDates.map((date) => {
-      const entry = sortedEntries.find(
-        (e) =>
-          e.consultantID === consultant.ID &&
-          new Date(e.entryDate).toLocaleDateString() === date
-      );
+  // Group entries by consultantID
+  const entriesByConsultant = sortedEntries.reduce<
+    Record<number, Record<string, TimeEntry>>
+  >((acc, entry) => {
+    const dateKey = new Date(entry.entryDate).toDateString();
+    if (!acc[entry.consultantID]) acc[entry.consultantID] = {};
+    acc[entry.consultantID][dateKey] = entry;
+    return acc;
+  }, {});
 
-      // Debit = positive hours, Credit = negative hours
-      if (entry) {
+  // Build series with zeros for missing dates
+  const consultantSeries = Object.entries(entriesByConsultant).map(
+    ([consultantID, entries]) => {
+      const data = uniqueDates.map((date) => {
+        const entry = entries[date];
+        if (!entry) return 0;
         return entry.type === "debit" ? entry.hours : -entry.hours;
-      }
-      return null; // No data for this date
-    });
+      });
 
-    return {
-      id: consultant.ID,
-      label: getConsultantName(consultant.ID),
-      data: seriesData,
-    };
-  });
+      return {
+        id: Number(consultantID),
+        label: getConsultantName(Number(consultantID)),
+        data,
+      };
+    }
+  );
+
+  // Filter out dates where *all consultants are 0*
+  const activeIndexes = uniqueDates
+    .map((_, i) =>
+      consultantSeries.some((s) => s.data[i] !== 0) ? i : null
+    )
+    .filter((i): i is number => i !== null);
+
+  const activeDates = activeIndexes.map((i) => uniqueDates[i]);
+  const filteredSeries = consultantSeries.map((s) => ({
+    ...s,
+    data: activeIndexes.map((i) => s.data[i]),
+  }));
 
   return (
     <LineChart
-      xAxis={[{ data: uniqueDates, scaleType: "band", label: "Date" }]}
-      series={consultantSeries}
+      xAxis={[{ data: activeDates, scaleType: "band", label: "Date" }]}
+      series={filteredSeries}
       height={300}
       margin={{ bottom: 40, left: 60, right: 20 }}
       slotProps={{
         legend: {
           direction: "horizontal",
           position: { vertical: "top", horizontal: "center" },
-        //   padding: 5,
         },
       }}
     />

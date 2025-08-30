@@ -12,5 +12,8 @@ export const showUpdateFormAtom = atom(false);
 // Project explorer's pagination atom
 export const projectExplorerPageNumberAtom = atom(0)
 
+// Project discovery page number atom
+export const projectDiscoveryPageNumberAtom = atom(0)
+
 // Domain's search query atom
 export const domainSearchQueryAtom = atom<string>()

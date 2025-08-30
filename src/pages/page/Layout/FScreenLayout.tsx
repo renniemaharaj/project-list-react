@@ -90,7 +90,7 @@ export const FScreenLayout: React.FC<FullScreenLayoutProps> = ({
             </div>
 
             {/* Side Panel Content (hidden when collapsed) */}
-            <div className={`${isCollapsed ? "hidden" : "block"}`}>
+            <div >
               <>
                 {side}
                 <br />

@@ -82,6 +82,36 @@ export default function ProjectCard({
     if (data) setProjectMeta(data);
   }, [data]);
 
+  function groupTimeEntriesByConsultant(
+    timeEntries: {
+      ID: number;
+      consultantID: number;
+      hours: number;
+      type: string;
+    }[],
+    getConsultantNameByID: (id: number) => string
+  ) {
+    const grouped = timeEntries
+      .filter((t) => t.type !== "debit")
+      .reduce<Record<number, { id: number; value: number; label: string }>>(
+        (acc, t) => {
+          const id = t.consultantID;
+          if (!acc[id]) {
+            acc[id] = {
+              id,
+              value: 0,
+              label: getConsultantNameByID(id),
+            };
+          }
+          acc[id].value += parseFloat(t.hours.toFixed(2));
+          return acc;
+        },
+        {}
+      );
+
+    return Object.values(grouped);
+  }
+
   return (
     <>
       {size === "lg" && (
@@ -106,8 +136,8 @@ export default function ProjectCard({
           ref={cardRef}
           variant="outlined"
           className={`p-4 transition-all w-full ${
-            theme === "light" ? "!bg-blue-50" : ""
-          }`}
+            !projectMeta && "animate-pulse"
+          } ${theme === "light" ? "!bg-blue-50" : ""}`}
         >
           <Flex className="flex flex-col gap-3">
             {/* Header */}
@@ -177,15 +207,10 @@ export default function ProjectCard({
                   <PieChart
                     series={[
                       {
-                        data: projectMeta?.timeEntries
-                          ?.filter((timeEntry) => timeEntry.type !== "debit")
-                          .map((timeEntry) => ({
-                            id: timeEntry.ID,
-                            value: parseFloat(timeEntry.hours.toFixed(2)),
-                            label: getConsultantNameByID(
-                              timeEntry.consultantID
-                            ),
-                          })),
+                        data: groupTimeEntriesByConsultant(
+                          projectMeta?.timeEntries ?? [],
+                          getConsultantNameByID
+                        ),
                       },
                     ]}
                     width={150}

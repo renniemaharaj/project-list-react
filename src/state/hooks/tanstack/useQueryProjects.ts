@@ -11,7 +11,7 @@ const useQueryProjects = () => {
     queryKey: ["projects", projectExplorerPageNumber],
     queryFn: async () => {
       const res = await fetch(
-        `${queryDomains.base}/projects/page/${projectExplorerPageNumber}`
+        `${queryDomains.base}/project/page/${projectExplorerPageNumber}`
       );
       if (!res.ok) throw new Error("Failed to fetch projects");
       return res.json() as Promise<number[]>;

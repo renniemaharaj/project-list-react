@@ -12,7 +12,7 @@ const useQueryProjectMeta = () => {
     queryKey: ["projectMeta", ProjectID],
     queryFn: async () => {
       const res = await fetch(
-        `${queryDomains.base}/projects/meta/${ProjectID}`
+        `${queryDomains.base}/meta/${ProjectID}`
       );
       if (!res.ok) throw new Error("Failed to fetch projects");
       return res.json() as Promise<ProjectMetaData>;

@@ -66,10 +66,10 @@ const Discovery = () => {
         {/* <Card className="shadow-md"> */}
         {/* <CardContent className="flex flex-row justify-between items-center p-3"> */}
         <Heading className="text-lg font-semibold">
-          {data.length} Results: Page {projectDiscoveryPageNumber + 1}
+          Results: Page {projectDiscoveryPageNumber + 1}
         </Heading>
 
-        <Flex className="flex flex-row gap-2 items-center">
+        <Flex className="flex w-full !flex-row gap-2 !justify-end items-center">
           {/* View Controls */}
           <IconButton
             size="1"

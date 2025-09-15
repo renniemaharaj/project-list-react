@@ -1,8 +1,8 @@
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
+// import Typography from "@m/ui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import Divider from "@mui/material/Divider";
+// import Divider from "@mui/material/Divider";
 import { ChevronDownIcon, ChevronUpIcon, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@primer/react";
@@ -52,51 +52,66 @@ const TimeEntries = ({
             consultants={consultants ?? []}
           />
 
-          {timeEntries?.map((timeEntry, idx) => (
-            <div key={timeEntry.ID}>
-              <div className="flex justify-between items-start">
-                <div>
-                  <Typography variant="h6" className="font-medium">
+          <div className="overflow-x-auto">
+            <div className="min-w-[600px]">
+              {timeEntries?.map((timeEntry) => (
+                <div
+                  key={timeEntry.ID}
+                  className="flex items-center text-sm border-b border-gray-200 hover:bg-gray-50"
+                >
+                  {/* Title */}
+                  <div className="px-2 py-1 w-40 truncate">
                     {timeEntry.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  </div>
+
+                  {/* Description */}
+                  <div className="px-2 py-1 w-60 text-gray-600">
                     {timeEntry.description || "No description"}
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    color={`${
-                      timeEntry.type === "debit" ? "success" : "error"
+                  </div>
+
+                  {/* Date */}
+                  <div className="px-2 py-1 w-28">
+                    {new Date(timeEntry.entryDate).toLocaleDateString()}
+                  </div>
+
+                  {/* Hours */}
+                  <div className="px-2 py-1 w-20 text-right font-medium">
+                    {timeEntry.hours.toFixed(2)}
+                  </div>
+
+                  {/* Type */}
+                  <div
+                    className={`px-2 py-1 w-20 text-center font-semibold ${
+                      timeEntry.type === "debit"
+                        ? "text-green-600"
+                        : "text-red-600"
                     }`}
                   >
-                    {new Date(timeEntry.entryDate).toLocaleDateString()} •{" "}
-                    {timeEntry.hours.toFixed(2)} hrs • {timeEntry.type}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {" by "}
-                    {
-                      consultants?.find(
-                        (consultant) => consultant.ID === timeEntry.consultantID
-                      )?.firstName
-                    }
-                  </Typography>
+                    {timeEntry.type}
+                  </div>
+
+                  {/* Consultant */}
+                  <div className="px-2 py-1 w-32 truncate text-gray-500">
+                    {consultants?.find((c) => c.ID === timeEntry.consultantID)
+                      ?.firstName || "—"}
+                  </div>
+
+                  {/* Delete Button */}
+                  {onDelete && (
+                    <div className="px-2 py-1 w-12 flex justify-center">
+                      <IconButton
+                        aria-label="delete"
+                        size="small"
+                        onClick={() => onDelete(timeEntry.ID)}
+                      >
+                        <Trash2 className="w-3 h-3 text-red-500" />
+                      </IconButton>
+                    </div>
+                  )}
                 </div>
-
-                {onDelete && (
-                  <IconButton
-                    aria-label="delete"
-                    size="small"
-                    onClick={() => onDelete(timeEntry.ID)}
-                  >
-                    <Trash2 className="w-2 h-2 text-red-500" />
-                  </IconButton>
-                )}
-              </div>
-
-              {idx < (timeEntries?.length ?? 0) - 1 && (
-                <Divider className="my-3" />
-              )}
+              ))}
             </div>
-          ))}
+          </div>
         </CardContent>
       </Card>
     </>

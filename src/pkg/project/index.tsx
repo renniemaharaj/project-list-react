@@ -5,12 +5,10 @@ import ProjectSkeleton from "./ProjectSkeleton";
 
 const Project = ({
   projectID,
-  size,
-  detailed,
+  variant,
 }: {
   projectID: number;
-  size?: "sm" | "lg";
-  detailed?: boolean
+  variant: "list" | "card" | "full";
 }) => {
   const { isLoading, error, data, setProjectID } = useQueryProject();
 
@@ -30,7 +28,7 @@ const Project = ({
   // Component returns an error text instead of dashboard if error
   if (!data) return <p className="text-red-500">Error getting project data.</p>;
 
-  return <ProjectCard project={data} detailed={detailed} size={size} />;
+  return <ProjectCard project={data} variant={variant} />;
 };
 
 export default Project;

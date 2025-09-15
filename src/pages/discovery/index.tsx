@@ -1,4 +1,4 @@
-import { Flex, Heading} from "@radix-ui/themes";
+import { Flex, Heading, IconButton } from "@radix-ui/themes";
 import useQuerySearch from "../../state/hooks/tanstack/useQuerySearch";
 import * as motion from "motion/react-client";
 import { Blankslate } from "@primer/react/experimental";
@@ -8,11 +8,15 @@ import { projectDiscoveryPageNumberAtom } from "../../state/app.atoms";
 import { useAtom } from "jotai";
 import { useRef, useState } from "react";
 import { Button } from "@primer/react";
+// import CardContent from "@mui/material/CardContent";
+// import Card from "@mui/material/Card";
 
 const Discovery = () => {
   const { data, isLoading, error } = useQuerySearch();
 
-  const [renderView, setRenderView] = useState<"default" | "full-w">("default");
+  const [renderView, setRenderView] = useState<"list" | "card" | "full">(
+    "list"
+  );
 
   const [projectDiscoveryPageNumber, setProjectDiscoveryPageNumber] = useAtom(
     projectDiscoveryPageNumberAtom
@@ -24,7 +28,7 @@ const Discovery = () => {
     if (flexRef.current)
       flexRef.current.scrollTo({ top: 0, behavior: "smooth" });
 
-    setTimeout(() => setProjectDiscoveryPageNumber((prev) => prev + 1), 1000);
+    setTimeout(() => setProjectDiscoveryPageNumber((prev) => prev + 1), 600);
   };
 
   if (error) return <p className="text-red-500">Error loading results.</p>;
@@ -53,85 +57,80 @@ const Discovery = () => {
     );
 
   return (
-    <Flex className="flex flex-col gap-2">
+    <Flex className="flex flex-col gap-4">
       <motion.div
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{
-          duration: 0.8,
-          delay: 0.2,
-          ease: [0, 0.71, 0.2, 1.01],
-        }}
+        transition={{ duration: 0.6, ease: [0.25, 0.8, 0.25, 1] }}
       >
-        <Flex className="flex flex-row gap-1 !w-full justify-between !items-center">
-          <Heading className="text-xl font-semibold">
-            {data.length} Results: Page ({projectDiscoveryPageNumber + 1})
-          </Heading>
+        {/* <Card className="shadow-md"> */}
+        {/* <CardContent className="flex flex-row justify-between items-center p-3"> */}
+        <Heading className="text-lg font-semibold">
+          {data.length} Results: Page {projectDiscoveryPageNumber + 1}
+        </Heading>
 
-          <Flex className="flex flex-row gap-1 items-center">
-            {/* View Controls */}
+        <Flex className="flex flex-row gap-2 items-center">
+          {/* View Controls */}
+          <IconButton
+            size="1"
+            aria-label="List View"
+            onClick={() => setRenderView("list")}
+            disabled={renderView === "list"}
+          >
+            <LayoutGrid className="w-2 h-2" />
+          </IconButton>
+
+          <IconButton
+            size="1"
+            aria-label="Card View"
+            onClick={() => setRenderView("card")}
+            disabled={renderView === "card"}
+          >
+            <LayoutGrid className="w-2 h-2" />
+          </IconButton>
+
+          <IconButton
+            size="1"
+            aria-label="Full View"
+            onClick={() => setRenderView("full")}
+            // disabled={renderView === "full"}
+            disabled
+          >
+            <StretchHorizontal className="w-2 h-2" />
+          </IconButton>
+
+          {/* Pagination Controls */}
+          {projectDiscoveryPageNumber > 0 && (
             <Button
-              // size="1"
-              // variant="soft"
-              size="small"
-              aria-label="Default View"
-              onClick={() => setRenderView("default")}
-              disabled={renderView === "default"}
-            >
-              <LayoutGrid className="!w-2 !h-2"/>
-            </Button>
-
-            <Button
-              // size="1"
-              // variant="soft"
-              size="small"
-              aria-label="Full Width View"
-              onClick={() => setRenderView("full-w")}
-              disabled={renderView === "full-w"}
-            >
-              <StretchHorizontal  className="!w-2 !h-2" />
-            </Button>
-
-            {/* Pagination Controls */}
-            {projectDiscoveryPageNumber > 0 && (
-              <Button
-                // size="small"
-                variant="link"
-                className="holographic-card"
-                onClick={() => setProjectDiscoveryPageNumber(0)}
-                aria-label={"First Page"}
-              >
-                First Page
-              </Button>
-            )}
-
-            <Button
-              // size=""
               variant="link"
-              className="holographic-card"
-              onClick={incrementPage}
-              aria-label={"Next Page"}
+              onClick={() => setProjectDiscoveryPageNumber(0)}
+              aria-label="First Page"
             >
-              Next Page
+              First Page
             </Button>
-          </Flex>
+          )}
+
+          <Button variant="link" onClick={incrementPage} aria-label="Next Page">
+            Next Page
+          </Button>
         </Flex>
+        {/* </CardContent> */}
+        {/* </Card> */}
       </motion.div>
 
       {/* Project Listing */}
       <Flex
         ref={flexRef}
-        className={`flex flex-row flex-wrap justify-start gap-2 transition-all duration-300 ${
-          renderView === "full-w" ? "!flex-col" : "!flex-row"
+        className={`flex flex-wrap justify-start gap-2 transition-all duration-300 ${
+          renderView === "full"
+            ? "flex-col"
+            : renderView === "card"
+            ? "flex-row"
+            : "flex-col"
         }`}
       >
         {data.map((projectID) => (
-          <Project
-            key={projectID}
-            projectID={projectID}
-            detailed={renderView==="full-w"}
-            size={renderView === "full-w" ? "lg" : "sm"}
-          />
+          <Project key={projectID} projectID={projectID} variant={renderView} />
         ))}
       </Flex>
     </Flex>

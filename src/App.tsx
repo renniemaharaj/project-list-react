@@ -53,10 +53,10 @@ function AppShell() {
         {/* Radix theme decorator */}
         <RadixTheme
           appearance={theme}
-          accentColor="gold"
-          radius="full"
+          accentColor="gray"
+          radius="large"
           panelBackground="translucent"
-          scaling="110%"
+          // scaling="110%"
           grayColor="sage"
         >
           {/* React Query */}

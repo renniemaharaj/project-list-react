@@ -89,7 +89,7 @@ const SidePane = () => {
       <Flex className="flex max-h-full flex-col !gap-2">
         {data?.map((projectID: number, i) => (
           <Box key={i + "project-list"}>
-            <Project projectID={projectID} detailed={false} size="lg"/>
+            <Project projectID={projectID} variant="list"/>
           </Box>
         ))}
       </Flex>

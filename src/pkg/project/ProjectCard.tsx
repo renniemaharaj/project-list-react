@@ -10,46 +10,39 @@ import AnimatedNumber from "../animatedNumber";
 import * as motion from "motion/react-client";
 import { PieChart } from "@mui/x-charts";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Token } from "@primer/react";
-// import Avatar from "@mui/material/Avatar";
+import { Link, Token } from "@primer/react";
 import TimeEntries from "./TimeEntries";
+import { useNavigationTransition } from "../../state/hooks/transition/useNavigationTransition";
 
 export default function ProjectCard({
   project,
-  size = "sm",
-  detailed = false
+  variant,
 }: {
   project: ProjectProps;
-  size?: "sm" | "lg";
-  detailed?: boolean
+  variant: "list" | "card" | "full";
 }) {
-  // Use tanstack query for querying project's meta
   const { data, error, isLoading, setProjectID } = useQueryProjectMeta();
   const [projectMeta, setProjectMeta] = useState<ProjectMetaData>();
-
-  useEffect(() => data && setProjectMeta(data), [data]);
+  const { transitionTo } = useNavigationTransition();
   const { theme } = useThemeContext();
 
-  // Track visibility
+  useEffect(() => data && setProjectMeta(data), [data]);
+
   const parentRef = useRef<HTMLDivElement | null>(null);
   const [inView, setInView] = useState(false);
 
-  // Calculate accumulated debit
   const debit =
     projectMeta?.timeEntries
       .filter((e) => e.type === "debit")
       .reduce((acc, e) => acc + e.hours, 0) ?? 0;
 
-  // Calculate accumuted credit
   const credit =
     projectMeta?.timeEntries
       .filter((e) => e.type === "credit")
       .reduce((acc, e) => acc + e.hours, 0) ?? 0;
 
-  // Calculated if out of budget
   const outOfBudget = credit > debit;
 
-  // Get consultant name by consultantID
   const getConsultantNameByID = useCallback(
     (timeEntry: number) =>
       projectMeta?.consultants?.find(
@@ -64,22 +57,19 @@ export default function ProjectCard({
         const [entry] = entries;
         if (entry.isIntersecting) {
           setTimeout(() => setInView(true), 100);
-          observer.disconnect(); // stop observing once loaded
+          observer.disconnect();
         }
       },
-      { threshold: 0.1 } // 20% visible triggers load
+      { threshold: 0.1 }
     );
     if (parentRef.current) observer.observe(parentRef.current);
-
     return () => observer.disconnect();
   }, [parentRef]);
 
-  // Trigger meta query only when visible
   useEffect(() => {
     if (inView) setProjectID(project.ID);
   }, [inView, project.ID, setProjectID]);
 
-  // Update state when data arrives
   useEffect(() => {
     if (data) setProjectMeta(data);
   }, [data]);
@@ -99,11 +89,7 @@ export default function ProjectCard({
         (acc, t) => {
           const id = t.consultantID;
           if (!acc[id]) {
-            acc[id] = {
-              id,
-              value: 0,
-              label: getConsultantNameByID(id),
-            };
+            acc[id] = { id, value: 0, label: getConsultantNameByID(id) };
           }
           acc[id].value += parseFloat(t.hours.toFixed(2));
           return acc;
@@ -116,150 +102,155 @@ export default function ProjectCard({
 
   return (
     <div ref={parentRef}>
-      {detailed && (
-        <TimeEntries
-          // onDelete={() => {}}
-          timeEntries={projectMeta?.timeEntries}
-          consultants={projectMeta?.consultants}
-        />
-      )}
-
-      <motion.div
-        className={`${size === "lg" ? "!w-full" : "max-w-[21rem]"}`}
-        initial={{ x: -100, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{
-          duration: 0.8,
-          delay: 0.5,
-          ease: [0, 0.71, 0.2, 1.01],
-        }}
-      >
-        <Card
-          
-          variant="outlined"
-          className={`p-4 transition-all w-full ${
-            !projectMeta && "animate-pulse"
-          } ${theme === "light" ? "!bg-blue-50" : ""}`}
+      {variant === "list" ? (
+        <motion.div
+          initial={{ x: -50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.5 }}
         >
-          <Flex className="flex flex-col gap-3">
-            {/* Header */}
-            <div className="flex justify-between gap-2 items-center">
-              <Heading className="text-xl font-semibold">
+          <Flex className="flex flex-row !justify-between items-center p-3 border-b">
+            <Link onClick={() => transitionTo(`/project/${project.ID}`)}>
+              <Heading className="cursor-pointer !text-sm">
                 {project.name}
               </Heading>
-              <Token
-                color={outOfBudget ? "red" : "green"}
-                text={outOfBudget ? "OOB" : "Healthy"}
-              />
-            </div>
+            </Link>
+            <Token
+              color={outOfBudget ? "red" : "green"}
+              text={outOfBudget ? "OOB" : "Healthy"}
+            />
+          </Flex>
+        </motion.div>
+      ) : (
+        <>
+          {variant === "full" && (
+            <TimeEntries
+              timeEntries={projectMeta?.timeEntries}
+              consultants={projectMeta?.consultants}
+            />
+          )}
 
-            {/* Metrics / Gauge */}
-            <Flex className="flex flex-row items-center justify-between mb-4">
-              <div className="flex gap-4">
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium text-blue-600">
-                    Hrs Assigned
-                  </span>
-                  <span className="text-lg font-semibold">
-                    <AnimatedNumber
-                      number={debit}
-                      fontStyle={{ fontSize: 30, color: "green" }}
-                    />
-                    hrs
-                  </span>
+          <motion.div
+            className={`${variant === "full" ? "!w-full" : "max-w-[21rem]"}`}
+            initial={{ x: -100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
+            <Card
+              variant="outlined"
+              className={`p-4 transition-all w-full ${
+                !projectMeta && "animate-pulse"
+              } ${theme === "light" ? "!bg-blue-50" : ""}`}
+            >
+              <Flex className="flex flex-col gap-3">
+                {/* Header */}
+                <div className="flex justify-between gap-2 items-center">
+                  <Heading className="text-xl font-semibold">
+                    {project.name}
+                  </Heading>
+                  <Token
+                    color={outOfBudget ? "red" : "green"}
+                    text={outOfBudget ? "OOB" : "Healthy"}
+                  />
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium text-purple-600">
-                    Hrs Used
-                  </span>
-                  <span>
-                    <AnimatedNumber
-                      number={credit}
-                      fontStyle={{
-                        fontSize: 30,
-                        color: credit > debit ? "red" : "green",
+
+                {/* Metrics / Gauges */}
+                <Flex className="flex flex-row items-center justify-between mb-4">
+                  <div className="flex gap-4">
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium text-blue-600">
+                        Hrs Assigned
+                      </span>
+                      <span className="text-lg font-semibold">
+                        <AnimatedNumber
+                          number={debit}
+                          fontStyle={{ fontSize: 24 }}
+                        />
+                        hrs
+                      </span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium text-purple-600">
+                        Hrs Used
+                      </span>
+                      <span>
+                        <AnimatedNumber
+                          number={credit}
+                          fontStyle={{
+                            fontSize: 24,
+                            color: credit > debit ? "red" : "green",
+                          }}
+                        />
+                        hrs
+                      </span>
+                    </div>
+                  </div>
+
+                  {variant === "card" ? (
+                    <Gauge
+                      width={100}
+                      height={100}
+                      value={credit}
+                      valueMax={debit || 1}
+                      text={({ value, valueMax }) =>
+                        `${parseFloat(value?.toFixed(1) ?? "0")}/${parseFloat(
+                          valueMax.toFixed(1)
+                        )}`
+                      }
+                      sx={{
+                        [`& .${gaugeClasses.valueArc}`]: {
+                          fill: credit > debit ? "red" : "#52b202",
+                        },
+                        [`& .${gaugeClasses.referenceArc}`]: {
+                          fill: "#ccc",
+                        },
                       }}
                     />
-                    hrs
-                  </span>
-                </div>
-              </div>
-              {!detailed ? (
-                <Gauge
-                  width={110}
-                  height={110}
-                  value={credit}
-                  valueMax={debit || 1}
-                  text={({ value, valueMax }) =>
-                    `${parseFloat(value?.toFixed(2) ?? "0")} / ${parseFloat(
-                      valueMax.toFixed(2)
-                    )}`
-                  }
-                  sx={{
-                    [`& .${gaugeClasses.valueArc}`]: {
-                      fill: credit > debit ? "red" : "#52b202",
-                    },
-                    [`& .${gaugeClasses.referenceArc}`]: {
-                      fill: "#ccc",
-                    },
-                  }}
+                  ) : (
+                    typeof projectMeta === "object" && (
+                      <PieChart
+                        series={[
+                          {
+                            data: groupTimeEntriesByConsultant(
+                              projectMeta?.timeEntries ?? [],
+                              getConsultantNameByID
+                            ),
+                          },
+                        ]}
+                        width={180}
+                        height={180}
+                      />
+                    )
+                  )}
+                </Flex>
+
+                {/* Description */}
+                {variant === "full" && (
+                  <Text size="2" className="text-sm text-gray-600">
+                    <strong>Description</strong>
+                    <br /> {project.description}
+                  </Text>
+                )}
+
+                <ProjectMeta
+                  size={variant === "full" ? "lg" : "sm"}
+                  project={project}
+                  projectMeta={projectMeta as ProjectMetaData}
                 />
-              ) : (
-                typeof projectMeta === "object" && (
-                  <PieChart
-                    series={[
-                      {
-                        data: groupTimeEntriesByConsultant(
-                          projectMeta?.timeEntries ?? [],
-                          getConsultantNameByID
-                        ),
-                      },
-                    ]}
-                    width={150}
-                    height={150}
-                  />
-                )
-              )}
-            </Flex>
 
-            <Text size="2" className="text-sm text-gray-600">
-              <span>
-                <strong>Description</strong>
-                <br /> {project.description}
-              </span>
-            </Text>
-
-            <ProjectMeta
-              size={detailed ? "lg" : "sm"}
-              project={project}
-              projectMeta={projectMeta as ProjectMetaData}
-            />
-
-            {isLoading ? (
-              <div className="flex justify-center py-6">
-                <Spinner className="w-6 h-6 text-blue-500" />
-              </div>
-            ) : error ? (
-              <Text size="2" className="text-sm text-red-600">
-                Failed to load project metrics
-              </Text>
-            ) : (
-              <>
-                {/* Consultants */}
-                {/* <div className="flex -space-x-3">
-                  {projectMeta?.consultants?.map((c) => (
-                    <Avatar
-                      key={c.ID}
-                      src={c.profilePicture}
-                      alt={`${c.firstName} ${c.lastName}`}
-                    />
-                  ))}
-                </div> */}
-              </>
-            )}
-          </Flex>
-        </Card>
-      </motion.div>
+                {isLoading ? (
+                  <div className="flex justify-center py-6">
+                    <Spinner className="w-6 h-6 text-blue-500" />
+                  </div>
+                ) : error ? (
+                  <Text size="2" className="text-sm text-red-600">
+                    Failed to load project metrics
+                  </Text>
+                ) : null}
+              </Flex>
+            </Card>
+          </motion.div>
+        </>
+      )}
     </div>
   );
 }

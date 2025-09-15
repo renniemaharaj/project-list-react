@@ -108,7 +108,8 @@ export default function ProjectCard({
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <Flex className="flex flex-row !justify-between items-center p-3 border-b">
+          <div className="text-sm border-b border-gray-200 hover:bg-blue-50">
+          <Flex className="flex flex-row !justify-between items-center p-3">
             <Link onClick={() => transitionTo(`/project/${project.ID}`)}>
               <Heading className="cursor-pointer !text-sm">
                 {project.name}
@@ -119,6 +120,7 @@ export default function ProjectCard({
               text={outOfBudget ? "OOB" : "Healthy"}
             />
           </Flex>
+          </div>
         </motion.div>
       ) : (
         <>

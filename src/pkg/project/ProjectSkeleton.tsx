@@ -1,15 +1,21 @@
-import Card from "@mui/material/Card";
-import useThemeContext from "../../state/hooks/theme/useThemeContext";
+// import Card from "@mui/material/Card";
+// import useThemeContext from "../../state/hooks/theme/useThemeContext";
+import { Flex, Heading } from "@radix-ui/themes";
+import { Token } from "@primer/react";
 
 const ProjectSkeleton = () => {
-  const { theme } = useThemeContext();
+  // const { theme } = useThemeContext();
   return (
-    <Card
-      variant="outlined"
-      className={`p-2 transition-all w-full animate-pulse ${
-        theme === "light" ? "!bg-blue-50" : ""
-      }`}
-    ></Card>
+    <div className="text-sm border-b border-gray-200 hover:bg-blue-50">
+      <Flex className="flex flex-row !justify-between items-center p-1">
+        {/* <Link onClick={() => transitionTo(`/project/${project.ID}`)}> */}
+        <Heading className="cursor-pointer !text-sm">
+          {/* {project.name} */}
+        </Heading>
+        {/* </Link> */}
+        <Token color={"green"} text={"Loading"} />
+      </Flex>
+    </div>
   );
 };
 

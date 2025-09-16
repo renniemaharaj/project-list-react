@@ -1,9 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@primer/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@primer/octicons-react";
 import { Box } from "@primer/react";
-import { projectExplorerPageNumberAtom } from "../../../state/app.atoms";
-import { useSetAtom } from "jotai";
 
 type FullScreenLayoutProps = {
   header?: React.ReactNode;
@@ -35,20 +33,7 @@ export const FScreenLayout: React.FC<FullScreenLayoutProps> = ({
   // Track collapsed state of side panel
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const flexRef = useRef<HTMLDivElement>(null);
 
-  const setProjectExplorerPageNumber = useSetAtom(
-    projectExplorerPageNumberAtom
-  );
-
-  const incrementPage = () => {
-    // Animate scroll up
-    if (flexRef.current)
-      flexRef.current.scrollTo({ top: 0, behavior: "smooth" });
-
-    // Only after increment
-    setTimeout(() => setProjectExplorerPageNumber((prev) => prev + 1), 1000);
-  };
 
   return (
     <div
@@ -72,7 +57,6 @@ export const FScreenLayout: React.FC<FullScreenLayoutProps> = ({
           }}
         >
           <div
-            ref={flexRef}
             className="h-full w-full scroll-smooth p-2 overflow-x-hidden overflow-y-auto"
           >
             {/* Collapse/Expand Button */}
@@ -91,20 +75,7 @@ export const FScreenLayout: React.FC<FullScreenLayoutProps> = ({
 
             {/* Side Panel Content (hidden when collapsed) */}
             <div >
-              <>
                 {side}
-                <br />
-                <Button
-                  size="small"
-                  // variant="invisible"
-                  variant="link"
-                  className="holographic-card w-full"
-                  onClick={incrementPage}
-                  aria-label={"Next Page"}
-                >
-                  Next Page
-                </Button>
-              </>
             </div>
           </div>
         </div>

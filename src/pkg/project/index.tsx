@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import useQueryProject from "../../state/hooks/tanstack/useQueryProject";
 import ProjectCard from "./ProjectCard";
 import ProjectSkeleton from "./ProjectSkeleton";
+import ProjectRow from "./ProjectRow";
 
 const Project = ({
   projectID,
@@ -28,6 +29,8 @@ const Project = ({
   // Component returns an error text instead of dashboard if error
   if (!data) return <p className="text-red-500">Error getting project data.</p>;
 
+  if (variant === "list") return <ProjectRow project={data}/>
+  
   return <ProjectCard project={data} variant={variant} />;
 };
 

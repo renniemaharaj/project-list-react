@@ -9,12 +9,12 @@ import {
 } from "lucide-react";
 import { PieChart } from "@mui/x-charts";
 import type { DashboardMetrics } from "./types";
-import * as motion from "motion/react-client";
+// import * as motion from "motion/react-client";
 
 const DashboardComp = ({ dashboard }: { dashboard: DashboardMetrics }) => {
   return (
     <>
-      <motion.div
+      {/* <motion.div
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{
@@ -24,10 +24,35 @@ const DashboardComp = ({ dashboard }: { dashboard: DashboardMetrics }) => {
         }}
       >
         <h1 className="text-2xl font-bold">Hello, Rennie </h1>
-      </motion.div>
-      <div className="p-6 space-y-6">
+      </motion.div> */}
+      {/* Big Stats Grid */}
+      <div className="flex flex-row justify-center flex-wrap gap-4">
+        <StatCard
+          icon={<TrendingUp />}
+          label="Active"
+          gauge={
+            <Gauge
+              value={dashboard.active}
+              maxValue={dashboard.projects}
+              color="green"
+            />
+          }
+        />
+        <StatCard
+          icon={<FolderCheck />}
+          label="Completed"
+          gauge={
+            <Gauge
+              value={dashboard.completed}
+              maxValue={dashboard.projects}
+              color="green"
+            />
+          }
+        />
+
+        {/* <div className="p-6 space-y-6"> */}
         {/* Big Total Projects Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="flex flex-row justify-center flex-wrap gap-4">
           <StatCard
             icon={<Briefcase />}
             label={`Total Projects (${dashboard.projects})`}
@@ -54,7 +79,11 @@ const DashboardComp = ({ dashboard }: { dashboard: DashboardMetrics }) => {
                         value: dashboard.outOfBudget,
                         label: "Out Of Budget",
                       },
-                      { id: 3, value: dashboard.idle, label: "Idle Projects" },
+                      {
+                        id: 3,
+                        value: dashboard.idle,
+                        label: "Idle Projects",
+                      },
                       {
                         id: 4,
                         value: dashboard.endingSoonCount,
@@ -69,27 +98,13 @@ const DashboardComp = ({ dashboard }: { dashboard: DashboardMetrics }) => {
             }
           />
           <StatCard
-            icon={<TrendingUp />}
-            label="Active"
+            icon={<AlertTriangle className="text-red-500" />}
+            label="Out of Budget"
             gauge={
               <Gauge
-                value={dashboard.active}
+                value={dashboard.outOfBudget}
                 maxValue={dashboard.projects}
-                color="green"
-              />
-            }
-          />
-        </div>
-        {/* Big Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <StatCard
-            icon={<FolderCheck />}
-            label="Completed"
-            gauge={
-              <Gauge
-                value={dashboard.completed}
-                maxValue={dashboard.projects}
-                color="green"
+                color="danger"
               />
             }
           />
@@ -104,21 +119,11 @@ const DashboardComp = ({ dashboard }: { dashboard: DashboardMetrics }) => {
               />
             }
           />
-          <StatCard
-            icon={<AlertTriangle className="text-red-500" />}
-            label="Out of Budget"
-            gauge={
-              <Gauge
-                value={dashboard.outOfBudget}
-                maxValue={dashboard.projects}
-                color="danger"
-              />
-            }
-          />
         </div>
+        {/* </div> */}
 
         {/* Financials */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="flex flex-row justify-center flex-wrap gap-4">
           <StatCard
             label="Total Asssigned"
             value={`${parseFloat(dashboard.totalDebit.toFixed(2))}hrs`}
@@ -132,20 +137,9 @@ const DashboardComp = ({ dashboard }: { dashboard: DashboardMetrics }) => {
             value={`${Math.round(dashboard.avgCreditOverDebit)}hrs`}
           />
         </div>
-
-        {/* Ending Soon */}
-        <StatCard
-          className="w-full"
-          label="Projects Ending Soon"
-          gauge={
-            <Gauge
-              value={dashboard.endingSoonCount}
-              maxValue={dashboard.projects}
-              color="danger"
-            />
-          }
-        />
+        
       </div>
+      
     </>
   );
 };

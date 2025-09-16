@@ -8,6 +8,7 @@ import { projectDiscoveryPageNumberAtom } from "../../state/app.atoms";
 import { useAtom } from "jotai";
 import { useRef, useState } from "react";
 import { Button } from "@primer/react";
+import ProjectTable from "../../pkg/project/ProjectTable";
 // import CardContent from "@mui/material/CardContent";
 // import Card from "@mui/material/Card";
 
@@ -129,9 +130,17 @@ const Discovery = () => {
             : "flex-col"
         }`}
       >
-        {data.map((projectID) => (
-          <Project key={projectID} projectID={projectID} variant={renderView} />
-        ))}
+        {renderView === "list" ? (
+          <ProjectTable projectIDs={data} />
+        ) : (
+          data.map((projectID) => (
+            <Project
+              key={projectID}
+              projectID={projectID}
+              variant={renderView}
+            />
+          ))
+        )}
       </Flex>
     </Flex>
   );

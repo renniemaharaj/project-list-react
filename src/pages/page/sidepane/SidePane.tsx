@@ -1,45 +1,42 @@
-import { Box, Flex } from "@radix-ui/themes";
 import { BookIcon } from "lucide-react";
 import useQueryProjects from "../../../state/hooks/tanstack/useQueryProjects";
-import { Blankslate, SkeletonText } from "@primer/react/experimental";
-import Project from "../../../pkg/project";
+import { Blankslate } from "@primer/react/experimental";
 import { projectExplorerPageNumberAtom } from "../../../state/app.atoms";
-import * as motion from "motion/react-client";
 import { useAtom } from "jotai";
+import useThemeContext from "../../../state/hooks/theme/useThemeContext";
+import { Card, Button } from "@mui/material";
+import { useRef } from "react";
+import ProjectTable from "../../../pkg/project/ProjectTable";
 
 const SidePane = () => {
-  const { isLoading, error, data } = useQueryProjects();
-
+  const { error, data } = useQueryProjects();
+  const { theme } = useThemeContext();
   const [projectExplorerPageNumber, setProjectExplorerPageNumber] = useAtom(
     projectExplorerPageNumberAtom
   );
 
-  // Loading state with skeletons
-  if (isLoading) {
-    return (
-      <>
-        <Blankslate>
-          <Blankslate.Visual>
-            <BookIcon size="medium" />
-          </Blankslate.Visual>
-          <Blankslate.Heading> Project Explorer </Blankslate.Heading>
-          <Blankslate.Description>
-            We're getting projects, hang tight.
-          </Blankslate.Description>
-        </Blankslate>
-        <SkeletonText lines={3} />
-      </>
-    );
-  }
+  const tableRef = useRef<HTMLDivElement>(null);
 
-  // Error state
+  const incrementPage = () => {
+    tableRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => setProjectExplorerPageNumber((prev) => prev + 1), 500);
+  };
+
+  const decrementPage = () => {
+    tableRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(
+      () => setProjectExplorerPageNumber((prev) => (prev > 0 ? prev - 1 : 0)),
+      500
+    );
+  };
+
   if (error) {
     return (
       <Blankslate>
         <Blankslate.Visual>
           <BookIcon size="medium" />
         </Blankslate.Visual>
-        <Blankslate.Heading> Project Explorer </Blankslate.Heading>
+        <Blankslate.Heading>Project Explorer</Blankslate.Heading>
         <Blankslate.Description>
           An error was encountered while fetching projects.
         </Blankslate.Description>
@@ -48,52 +45,23 @@ const SidePane = () => {
     );
   }
 
-  // Empty state
-  if (!data || data?.length === 0) {
-    return (
-      <Blankslate>
-        <Blankslate.Visual>
-          <BookIcon size="medium" />
-        </Blankslate.Visual>
-        <Blankslate.Heading> Project Explorer </Blankslate.Heading>
-        <Blankslate.Description>
-          There are no projects to display for this page.
-        </Blankslate.Description>
-
-        {projectExplorerPageNumber > 0 ? (
-          <Blankslate.PrimaryAction
-            onClick={() => setProjectExplorerPageNumber(0)}
-          >
-            Go Back
-          </Blankslate.PrimaryAction>
-        ) : (
-          <Blankslate.PrimaryAction href="/create">
-            New Project
-          </Blankslate.PrimaryAction>
-        )}
-      </Blankslate>
-    );
-  }
-
-  // Success state
   return (
-    <motion.div
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{
-        duration: 0.8,
-        delay: 0.2,
-        ease: [0, 0.71, 0.2, 1.01],
-      }}
-    >
-      <Flex className="flex max-h-full flex-col !gap-2">
-        {data?.map((projectID: number, i) => (
-          <Box key={i + "project-list"}>
-            <Project projectID={projectID} variant="list"/>
-          </Box>
-        ))}
-      </Flex>
-    </motion.div>
+    <Card variant="outlined" className={`${theme === "light" ? "!bg-blue-50" : ""}`}>
+      {/* <CardContent> */}
+        <ProjectTable projectIDs={data ?? []} containerRef={tableRef} />
+      {/* </CardContent> */}
+
+      <div className="flex flex-row">
+        {projectExplorerPageNumber > 0 && (
+          <Button size="small" variant="text" className="w-full" onClick={decrementPage}>
+            Previous Page
+          </Button>
+        )}
+        <Button size="small" variant="text" className="w-full" onClick={incrementPage}>
+          Next Page
+        </Button>
+      </div>
+    </Card>
   );
 };
 

@@ -1,7 +1,7 @@
 import { memo, type ReactNode } from "react";
 import SubdomainNavbar from "./subdomainNavbar/SubNavBar";
 import { Box } from "@primer/react-brand";
-import CreateFormDialog from "../forms/CreateDialog";
+import CreateFormDialog from "../../pkg/forms/CreateDialog";
 import { FScreenLayout } from "./FScreenLayout";
 import SidePane from "./sidepane/SidePane";
 

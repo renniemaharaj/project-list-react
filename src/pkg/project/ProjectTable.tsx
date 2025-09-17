@@ -32,7 +32,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
     <TableContainer
       ref={tableRef}
       sx={{
-        maxHeight: "22rem",
+        maxHeight: "25rem",
         overflow: "auto",
       }}
     >

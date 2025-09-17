@@ -1,4 +1,4 @@
-import * as motion from "motion/react-client";
+// import * as motion from "motion/react-client";
 import useQuerySearch from "../../state/hooks/tanstack/useQuerySearch";
 import { Blankslate } from "@primer/react/experimental";
 import { SearchIcon } from "lucide-react";
@@ -52,19 +52,20 @@ const Discovery = () => {
     );
 
   return (
-    <motion.div
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: [0.25, 0.8, 0.25, 1] }}
-    >
+    // <motion.div
+    //   initial={{ y: -100, opacity: 0 }}
+    //   animate={{ y: 0, opacity: 1 }}
+    //   transition={{ duration: 0.6, ease: [0.25, 0.8, 0.25, 1] }}
+    // >
       <ProjectResults
         data={data}
+        className="!h-full"
         onPagePrevious={
           projectDiscoveryPageNumber > 0 ? decrementPage : undefined
         }
         onPageForward={data.length > 0 ? incrementPage : undefined}
       />
-    </motion.div>
+    // </motion.div>
   );
 };
 

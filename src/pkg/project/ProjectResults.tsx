@@ -8,10 +8,12 @@ import ProjectTable from "../../pkg/project/ProjectTable";
 const ProjectResults = ({
   data,
   variant = "list",
+  className,
   onPagePrevious,
   onPageForward,
 }: {
   data: number[];
+  className?: string,
   variant?: "list" | "card" | "full";
   onPagePrevious?: () => void;
   onPageForward?: () => void;
@@ -21,9 +23,9 @@ const ProjectResults = ({
   );
 
   return (
-    <Flex className="flex flex-col justify-center gap-2">
+    <Flex className={`${className} flex flex-col justify-center gap-2`}>
       {/* Header Controls */}
-      <Flex className="flex w-full !flex-row gap-1 !justify-end items-center">
+      <Flex className="flex w-full !flex-row px-2 gap-1 !justify-end items-center">
         {/* View Controls */}
         <IconButton
           size="1"

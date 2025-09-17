@@ -82,7 +82,7 @@ const ProjectResults = ({
           <ProjectTable projectIDs={data} />
         ) : (
           <>
-            <Flex className="flex flex-row gap-2 flex-wrap !justify-center">
+            <Flex className="flex flex-row gap-3 flex-wrap !justify-center">
               {/* Show first 10 projects as card/full */}
               {data.slice(0, 10).map((projectID) => (
                 <Project

@@ -3,12 +3,12 @@ import type { ProjectMetaData, ProjectProps } from "./types";
 import { Flex } from "@radix-ui/themes";
 import { ChevronRightIcon } from "lucide-react";
 import { useNavigationTransition } from "../../state/hooks/transition/useNavigationTransition";
-import ProjectActivity from "./ProjectActivity";
+// import ProjectActivity from "./ProjectActivity";
 import { Button } from "@mui/material";
 
 const ProjectMeta = ({
   project,
-  projectMeta,
+  // projectMeta,
   size = "sm",
 }: {
   project: ProjectProps;
@@ -24,7 +24,7 @@ const ProjectMeta = ({
     <>
       {/* Collapse/Expand Button */}
       {size === "sm" && (
-        <div className="w-full overflow-auto">
+        <div className="w-full">
           <Button
             size="small"
             variant="outlined"
@@ -79,9 +79,6 @@ const ProjectMeta = ({
             </span>
           </Flex>
         </div>
-
-        {/* Project Activity Sparkline */}
-        {projectMeta && <ProjectActivity projectMeta={projectMeta} />}
       </Flex>
     </>
   );

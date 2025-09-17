@@ -21,9 +21,9 @@ const ProjectResults = ({
   );
 
   return (
-    <Flex className="flex flex-col gap-4">
+    <Flex className="flex flex-col justify-center gap-2">
       {/* Header Controls */}
-      <Flex className="flex w-full !flex-row gap-2 !justify-end items-center">
+      <Flex className="flex w-full !flex-row gap-1 !justify-end items-center">
         {/* View Controls */}
         <IconButton
           size="1"
@@ -80,14 +80,16 @@ const ProjectResults = ({
           <ProjectTable projectIDs={data} />
         ) : (
           <>
-            {/* Show first 10 projects as card/full */}
-            {data.slice(0, 10).map((projectID) => (
-              <Project
-                key={projectID}
-                projectID={projectID}
-                variant={renderView}
-              />
-            ))}
+            <Flex className="flex flex-row gap-2 flex-wrap !justify-center">
+              {/* Show first 10 projects as card/full */}
+              {data.slice(0, 10).map((projectID) => (
+                <Project
+                  key={projectID}
+                  projectID={projectID}
+                  variant={renderView}
+                />
+              ))}
+            </Flex>
 
             <Separator size="4" />
 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@primer/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@primer/octicons-react";
 import { Box } from "@primer/react";
+import { Flex } from "@radix-ui/themes";
 
 type FullScreenLayoutProps = {
   header?: React.ReactNode;
@@ -33,8 +34,6 @@ export const FScreenLayout: React.FC<FullScreenLayoutProps> = ({
   // Track collapsed state of side panel
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-
-
   return (
     <div
       className="flex flex-col h-screen w-screen overflow-hidden"
@@ -50,16 +49,16 @@ export const FScreenLayout: React.FC<FullScreenLayoutProps> = ({
       {/* Body (Side + Content) */}
       <Box className="flex flex-1 overflow-hidden">
         {/* Side Panel */}
-        <div
-          className={`flex flex-row transition-all duration-300 ease-in-out h-full border-r`}
+        <Flex
+          className={`transition-all duration-300 ease-in-out border-r`}
           style={{
             width: isCollapsed ? `${paneCW[0]}rem` : `${paneCW[1]}rem`,
           }}
         >
-            <div
-            className="h-full w-full scroll-smooth p-2 overflow-x-hidden overflow-y-auto"
+          <Flex
+            className="!flex-col h-full w-full scroll-smooth p-1 overflow-x-hidden overflow-y-auto"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-            >
+          >
             <style>
               {`
               .hide-scrollbar::-webkit-scrollbar {
@@ -67,25 +66,24 @@ export const FScreenLayout: React.FC<FullScreenLayoutProps> = ({
               }
               `}
             </style>
+
             {/* Collapse/Expand Button */}
-            <div className="w-full mb-2 overflow-auto">
+            <div className="w-full mb-2">
               <Button
-              size="small"
-              variant="link"
-              className="holographic-card w-full"
-              onClick={() => setIsCollapsed(!isCollapsed)}
-              aria-label={isCollapsed ? "Expand panel" : "Collapse panel"}
+                size="small"
+                variant="link"
+                className="holographic-card w-full"
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                aria-label={isCollapsed ? "Expand panel" : "Collapse panel"}
               >
-              {isCollapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                {isCollapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
               </Button>
             </div>
 
             {/* Side Panel Content (hidden when collapsed) */}
-            <div className={`${isCollapsed && "hidden"}`}>
-              {side}
-            </div>
-            </div>
-        </div>
+            <div className={`${isCollapsed && "hidden"}`}>{side}</div>
+          </Flex>
+        </Flex>
 
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto !justify-center p-2">

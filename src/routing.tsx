@@ -1,6 +1,6 @@
 import { Route } from "react-router-dom";
-import Suspended from "./suspended";
-import { protectedRoutes, publicRoutes } from "../routes";
+import { protectedRoutes, publicRoutes } from "./pages/routes";
+import Suspended from "./pages/suspended";
 
 export interface Primitve {
   element: React.JSX.Element;

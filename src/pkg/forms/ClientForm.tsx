@@ -2,11 +2,8 @@ import { Button, Text } from "@primer/react";
 import { FormControl, TextInput } from "@primer/react-brand";
 import { useEffect, useRef } from "react";
 import { TextField } from "@mui/material";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
-export const ProjectForm = ({ onClose }: { onClose: () => void }) => {
+export const ClientForm = ({ onClose }: { onClose: () => void }) => {
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
@@ -18,7 +15,7 @@ export const ProjectForm = ({ onClose }: { onClose: () => void }) => {
       const formData = new FormData(form);
 
       // TODO: handle submission properly here
-      console.log("Form Data:", Object.fromEntries(formData));
+      console.log("Client Data:", Object.fromEntries(formData));
 
       onClose();
     };
@@ -43,76 +40,78 @@ export const ProjectForm = ({ onClose }: { onClose: () => void }) => {
           All fields marked with an asterisk (*) are required
         </Text>
 
-        {/* Project Number + Name */}
+        {/* Company Name */}
+        <FormControl fullWidth required>
+          <FormControl.Label>Company Name</FormControl.Label>
+          <TextInput
+            name="companyName"
+            required
+            autoComplete="off"
+            placeholder="e.g. Acme Corporation"
+          />
+        </FormControl>
+
+        {/* Contact Person (First + Last) */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "0.3fr 1fr",
+            gridTemplateColumns: "1fr 1fr",
             gap: 16,
           }}
         >
           <FormControl fullWidth required>
-            <FormControl.Label>Project Number</FormControl.Label>
+            <FormControl.Label>First Name</FormControl.Label>
             <TextInput
-              name="number"
-              type="number"
+              name="firstName"
               required
-              min={1}
               autoComplete="off"
-              placeholder="e.g. 101"
+              placeholder="Jane"
             />
           </FormControl>
 
           <FormControl fullWidth required>
-            <FormControl.Label>Project Name</FormControl.Label>
+            <FormControl.Label>Last Name</FormControl.Label>
             <TextInput
-              name="name"
+              name="lastName"
               required
               autoComplete="off"
-              placeholder="Project Alpha"
+              placeholder="Doe"
             />
           </FormControl>
         </div>
 
-        {/* Date Pickers */}
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              position:"relative",
-              gap: 16,
-            }}
-          >
-            <DatePicker
-              label="Projected Start Date"
-              slotProps={{ textField: { required: true, name: "projectedStartDate" } }}
-            />
-            <DatePicker
-              label="Start Date"
-              slotProps={{ textField: { name: "startDate" } }}
-            />
-            <DatePicker
-              label="Projected End Date"
-              slotProps={{ textField: { required: true, name: "projectedEndDate" } }}
-            />
-            <DatePicker
-              label="End Date"
-              slotProps={{ textField: {  name: "endDate" } }}
-            />
-          </div>
-        </LocalizationProvider>
-
-        {/* Description */}
+        {/* Email */}
         <FormControl fullWidth required>
-          <FormControl.Label>Project Description</FormControl.Label>
-          <TextField
-            name="description"
+          <FormControl.Label>Email</FormControl.Label>
+          <TextInput
+            name="email"
+            type="email"
             required
+            autoComplete="off"
+            placeholder="jane.doe@acme.com"
+          />
+        </FormControl>
+
+        {/* Profile Picture URL */}
+        <FormControl fullWidth>
+          <FormControl.Label>Profile Picture (URL)</FormControl.Label>
+          <TextInput
+            name="profilePicture"
+            type="url"
+            autoComplete="off"
+            placeholder="https://example.com/profile.jpg"
+          />
+        </FormControl>
+
+        {/* Notes / Description */}
+        <FormControl fullWidth>
+          <FormControl.Label>Notes</FormControl.Label>
+          <TextField
+            name="notes"
             fullWidth
             multiline
             rows={3}
-            placeholder="Enter a brief project description..."
+            placeholder="Any additional client notes..."
           />
         </FormControl>
 
@@ -128,7 +127,7 @@ export const ProjectForm = ({ onClose }: { onClose: () => void }) => {
             Cancel
           </Button>
           <Button variant="primary" type="submit">
-            Create Project
+            Create Client
           </Button>
         </div>
       </div>

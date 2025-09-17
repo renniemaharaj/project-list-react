@@ -47,8 +47,6 @@ const SidePane = () => {
 
   return (
     <>
-      {/* <CardContent> */}
-      {/* <ProjectTable projectIDs={data ?? []} containerRef={tableRef} /> */}
       <ProjectResults
         data={data ?? []}
         variant="card"
@@ -57,20 +55,6 @@ const SidePane = () => {
         }
         onPageForward={incrementPage}
       />
-      {/* </CardContent> */}
-
-      {/* <Separator className="mt-1" size="4"/> */}
-
-      {/* <div className="flex flex-row">
-        {projectExplorerPageNumber > 0 && (
-          <Button size="small" variant="text" className="w-full" onClick={decrementPage}>
-            Previous Page
-          </Button>
-        )}
-        <Button size="small" variant="text" className="w-full" onClick={incrementPage}>
-          Next Page
-        </Button>
-      </div> */}
     </>
   );
 };

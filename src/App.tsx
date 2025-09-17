@@ -22,7 +22,7 @@ import ErrorFallback from "./pages/error";
 
 import { ThemeProvider as LocalThemeProvider } from "./state/hooks/theme/ThemeProvider";
 import useThemeContext from "./state/hooks/theme/useThemeContext";
-import { protectedRoutesFunc, publicRoutesFunc } from "./pages/routing";
+import { protectedRoutesFunc, publicRoutesFunc } from "./routing";
 
 function App() {
   return (

@@ -13,24 +13,23 @@ const Project = ({
 }) => {
   const { isLoading, error, data, setProjectID } = useQueryProject();
 
+  // Hook must be rendered before
   useEffect(() => setProjectID(projectID), [projectID, setProjectID]);
-  
+
   // Silently return if projectID is not truthy
-  if (!projectID)return
-  
-  // Component returns an error text instead of dashboard if error
+  if (!projectID) return;
+
   // if (isLoading) return <p className="text-green-500">Getting project data.</p>;
-  if (isLoading) return <ProjectSkeleton/>;
-
-
-  // Component returns an error text instead of dashboard if error
-  if (error) return <p className="text-red-500">Error getting project data.</p>;
+  if (isLoading) return <ProjectSkeleton />;
 
   // Component returns an error text instead of dashboard if error
-  if (!data) return <p className="text-red-500">Error getting project data.</p>;
+  // Component returns an error text instead of dashboard if error
+  if (error || !data) return <p className="text-red-500">Error getting project data.</p>;
 
-  if (variant === "list") return <ProjectRow project={data}/>
-  
+  // If variant === list then return a html table row element
+  if (variant === "list") return <ProjectRow project={data} />;
+
+  // Other return a project card with variant passed
   return <ProjectCard project={data} variant={variant} />;
 };
 

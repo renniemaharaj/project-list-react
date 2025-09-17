@@ -54,7 +54,7 @@ const SubdomainNavbar = () => {
         onSubmit={searchFormSubmit}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
-      <SubdomainNavBar.PrimaryAction href="/create">
+      <SubdomainNavBar.PrimaryAction href="/create/project">
         New Project
       </SubdomainNavBar.PrimaryAction>
       <SubdomainNavBar.SecondaryAction href="#" className="!border-none">

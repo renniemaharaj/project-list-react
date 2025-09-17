@@ -6,9 +6,9 @@ import { useAtom, useAtomValue } from "jotai";
 
 import LinkText from "../sidepane/LinkText";
 import { sanitizeSearchQuery } from "./utils";
-import { domainSearchQueryAtom, showCreateFormAtom, showUpdateFormAtom } from "../../state/app.atoms";
-import { useNavigationTransition } from "../../state/hooks/transition/useNavigationTransition";
-import AuthUser from "../../pkg/firebase/auth/AuthUser";
+import { domainSearchQueryAtom, showCreateFormAtom, showUpdateFormAtom } from "../../../state/app.atoms";
+import { useNavigationTransition } from "../../../state/hooks/transition/useNavigationTransition";
+import AuthUser from "../../../pkg/firebase/auth/AuthUser";
 
 const SubdomainNavbar = () => {
   const [subDomain] = useState("HRTM Projects");

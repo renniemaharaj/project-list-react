@@ -1,9 +1,9 @@
 import { memo, type ReactNode } from "react";
-import SubdomainNavbar from "../subdomainNavbar/SubNavBar";
+import SubdomainNavbar from "./subdomainNavbar/SubNavBar";
 import { Box } from "@primer/react-brand";
 import CreateFormDialog from "../forms/CreateDialog";
-import SidePane from "../sidepane/SidePane";
 import { FScreenLayout } from "./FScreenLayout";
+import SidePane from "./sidepane/SidePane";
 
 const Layout = ({ children }: { children?: ReactNode }) => {
   return (

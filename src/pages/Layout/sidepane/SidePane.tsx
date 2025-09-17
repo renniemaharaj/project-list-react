@@ -4,9 +4,9 @@ import { useAtom } from "jotai";
 import { Button } from "@mui/material";
 import { useRef } from "react";
 import { Separator } from "@radix-ui/themes";
-import { projectExplorerPageNumberAtom } from "../../state/app.atoms";
-import useQueryProjects from "../../state/hooks/tanstack/useQueryProjects";
-import ProjectTable from "../../pkg/project/ProjectTable";
+import useQueryProjects from "../../../state/hooks/tanstack/useQueryProjects";
+import { projectExplorerPageNumberAtom } from "../../../state/app.atoms";
+import ProjectTable from "../../../pkg/project/ProjectTable";
 
 const SidePane = () => {
   const { error, data } = useQueryProjects();

@@ -3,7 +3,7 @@ import { Button } from "@primer/react";
 import { Dialog } from "@primer/react/experimental";
 import UpdateForm from "./UpdateForm";
 import { useSetAtom } from "jotai";
-import { showUpdateFormAtom } from "../../../state/app.atoms";
+import { showUpdateFormAtom } from "../../state/app.atoms";
 
 const UpdateDialog = () => {
   const [isOpen, setIsOpen] = React.useState(false);

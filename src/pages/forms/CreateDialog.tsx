@@ -3,7 +3,7 @@ import React from "react";
 import { Dialog } from "@primer/react/experimental";
 import { CreateForm } from "./CreateForm";
 import { useAtom } from "jotai";
-import { showCreateFormAtom } from "../../../state/app.atoms";
+import { showCreateFormAtom } from "../../state/app.atoms";
 
 export default function CreateFormDialog() {
   const [isOpen, setIsOpen] = useAtom(showCreateFormAtom);

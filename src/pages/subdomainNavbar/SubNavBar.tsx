@@ -1,17 +1,14 @@
 import { useState } from "react";
 import { SubdomainNavBar } from "@primer/react-brand";
-import AuthUser from "../../../pkg/firebase/auth/AuthUser";
 
 import "./styles.css";
 import { useAtom, useAtomValue } from "jotai";
-import {
-  domainSearchQueryAtom,
-  showCreateFormAtom,
-  showUpdateFormAtom,
-} from "../../../state/app.atoms";
+
 import LinkText from "../sidepane/LinkText";
-import { useNavigationTransition } from "../../../state/hooks/transition/useNavigationTransition";
 import { sanitizeSearchQuery } from "./utils";
+import { domainSearchQueryAtom, showCreateFormAtom, showUpdateFormAtom } from "../../state/app.atoms";
+import { useNavigationTransition } from "../../state/hooks/transition/useNavigationTransition";
+import AuthUser from "../../pkg/firebase/auth/AuthUser";
 
 const SubdomainNavbar = () => {
   const [subDomain] = useState("HRTM Projects");

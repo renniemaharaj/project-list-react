@@ -18,11 +18,11 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { AuthRouter } from "./pkg/firebase/auth/AuthRouter";
-import { protectedRoutesFunc, publicRoutesFunc } from "./pages/page/routing";
 import ErrorFallback from "./pages/error";
 
 import { ThemeProvider as LocalThemeProvider } from "./state/hooks/theme/ThemeProvider";
 import useThemeContext from "./state/hooks/theme/useThemeContext";
+import { protectedRoutesFunc, publicRoutesFunc } from "./pages/routing";
 
 function App() {
   return (

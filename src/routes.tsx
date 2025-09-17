@@ -1,10 +1,10 @@
 import Index from "./pages/index/index";
 import Missing from "./pages/missing";
-import type { CustomRoute, IndexRoute } from "./pages/page/routing";
 import CreateProject from "./pages/create";
 import ProjectRoute from "./pages/project";
-import Layout from "./pages/page/Layout";
 import Discovery from "./pages/discovery";
+import Layout from "./pages/Layout";
+import type { CustomRoute, IndexRoute } from "./pages/routing";
 
 export const protectedRoutes: CustomRoute[] = [];
 

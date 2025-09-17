@@ -49,7 +49,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {projectIDs.map((projectID, i) => (
+          {projectIDs?.map((projectID, i) => (
             <Project
               key={`${i}-project`}
               projectID={projectID}

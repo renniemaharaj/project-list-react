@@ -9,9 +9,11 @@ import {
 } from "lucide-react";
 import { PieChart } from "@mui/x-charts";
 import type { DashboardMetrics } from "./types";
+import { useNavigationTransition } from "../../state/hooks/transition/useNavigationTransition";
 // import * as motion from "motion/react-client";
 
 const DashboardComp = ({ dashboard }: { dashboard: DashboardMetrics }) => {
+  const { transitionTo } = useNavigationTransition();
   return (
     <>
       {/* <motion.div
@@ -30,6 +32,7 @@ const DashboardComp = ({ dashboard }: { dashboard: DashboardMetrics }) => {
         <StatCard
           icon={<TrendingUp />}
           label="Active"
+          actionBar={[{title:"Active Projects", action:()=>transitionTo("/search/active")}]}
           gauge={
             <Gauge
               value={dashboard.active}

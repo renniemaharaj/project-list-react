@@ -3,14 +3,13 @@ import useQueryProjects from "../../../state/hooks/tanstack/useQueryProjects";
 import { Blankslate } from "@primer/react/experimental";
 import { projectExplorerPageNumberAtom } from "../../../state/app.atoms";
 import { useAtom } from "jotai";
-import useThemeContext from "../../../state/hooks/theme/useThemeContext";
-import { Card, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import { useRef } from "react";
 import ProjectTable from "../../../pkg/project/ProjectTable";
+import { Separator } from "@radix-ui/themes";
 
 const SidePane = () => {
   const { error, data } = useQueryProjects();
-  const { theme } = useThemeContext();
   const [projectExplorerPageNumber, setProjectExplorerPageNumber] = useAtom(
     projectExplorerPageNumberAtom
   );
@@ -46,11 +45,13 @@ const SidePane = () => {
   }
 
   return (
-    <Card variant="outlined" className={`${theme === "light" ? "!bg-blue-50" : ""}`}>
+    <>
       {/* <CardContent> */}
         <ProjectTable projectIDs={data ?? []} containerRef={tableRef} />
       {/* </CardContent> */}
 
+      <Separator className="mt-1" size="4"/>
+      
       <div className="flex flex-row">
         {projectExplorerPageNumber > 0 && (
           <Button size="small" variant="text" className="w-full" onClick={decrementPage}>
@@ -61,7 +62,7 @@ const SidePane = () => {
           Next Page
         </Button>
       </div>
-    </Card>
+    </>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Flex, Heading, IconButton } from "@radix-ui/themes";
+import { Flex, Heading, IconButton, Separator } from "@radix-ui/themes";
 import useQuerySearch from "../../state/hooks/tanstack/useQuerySearch";
 import * as motion from "motion/react-client";
 import { Blankslate } from "@primer/react/experimental";
@@ -52,9 +52,14 @@ const Discovery = () => {
       <p className="text-red-500">Something went wrong loading dashboard.</p>
     );
 
-  if (data.length == 0)
+  if (data.length === 0)
     return (
-      <p className="text-green-500">No Results. Try editing your query?</p>
+      <p>
+        No results for this page or query. Try{" "}
+        <a href={location.href} className="underline text-blue-600">
+          resetting your query?
+        </a>
+      </p>
     );
 
   return (
@@ -133,13 +138,26 @@ const Discovery = () => {
         {renderView === "list" ? (
           <ProjectTable projectIDs={data} />
         ) : (
-          data.map((projectID) => (
-            <Project
-              key={projectID}
-              projectID={projectID}
-              variant={renderView}
-            />
-          ))
+          <>
+            {/* Show first 4 projects as card/full */}
+            {data.slice(0, 10).map((projectID) => (
+              <Project
+                key={projectID}
+                projectID={projectID}
+                variant={renderView}
+              />
+            ))}
+
+            <Separator size="4"/>
+
+            {/* Show remaining projects as table */}
+            {data.length > 10 && (
+              <div className="w-full mt-4">
+                <Heading className="text-md !mb-2">Remaining Results</Heading>
+                <ProjectTable projectIDs={data.slice(10)} />
+              </div>
+            )}
+          </>
         )}
       </Flex>
     </Flex>

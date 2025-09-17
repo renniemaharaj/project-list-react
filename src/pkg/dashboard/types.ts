@@ -10,3 +10,8 @@ export type DashboardMetrics = {
   avgCreditOverDebit: number;
   endingSoonCount: number;
 };
+
+export type StatActionButton = {
+  title: string;
+  action: () => void;
+};

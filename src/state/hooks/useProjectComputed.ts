@@ -56,8 +56,7 @@ export default function useProjectComputed(
   // helper to resolve consultant names
   const getConsultantNameByID = useCallback(
     (id: number) =>
-      projectMeta?.consultants?.find((c: Consultant) => c.ID === id)?.firstName ??
-      "Unknown",
+      projectMeta?.consultants?.find((c: Consultant) => c.ID === id)?.firstName,
     [projectMeta]
   );
 
@@ -66,7 +65,7 @@ export default function useProjectComputed(
     (timeEntries: TimeEntry[] = []) => {
       const grouped = timeEntries
         .filter((t) => t.type !== "debit")
-        .reduce<Record<number, { id: number; value: number; label: string }>>(
+        .reduce<Record<number, { id: number; value: number; label?: string }>>(
           (acc, t) => {
             const id = t.consultantID;
             if (!acc[id]) {

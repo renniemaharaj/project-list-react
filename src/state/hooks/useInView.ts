@@ -13,7 +13,7 @@ type UseInViewOptions = {
 export function useInView<T extends HTMLElement>({
   windowMs = 150,
   threshold = 0.5,
-  rootMargin = "100px",
+  rootMargin = "300px",
 }: UseInViewOptions = {}) {
   const ref = useRef<T | null>(null);
   const [isInView, setInView] = useState(false);

@@ -1,22 +1,15 @@
-// import Card from "@mui/material/Card";
-// import useThemeContext from "../../state/hooks/theme/useThemeContext";
-import { Flex, Heading } from "@radix-ui/themes";
-import { Token } from "@primer/react";
+import { SkeletonText } from "@primer/react/experimental";
 
-const ProjectSkeleton = () => {
-  // const { theme } = useThemeContext();
+const ProjectRowSkeleton = () => {
   return (
-    <div className="text-sm border-b border-gray-200 hover:bg-blue-50">
-      <Flex className="flex flex-row !justify-between items-center p-1">
-        {/* <Link onClick={() => transitionTo(`/project/${project.ID}`)}> */}
-        <Heading className="cursor-pointer !text-sm">
-          {/* {project.name} */}
-        </Heading>
-        {/* </Link> */}
-        <Token color={"green"} text={"Loading"} />
-      </Flex>
-    </div>
+    <>
+    <SkeletonText width="60px" />
+    <SkeletonText width="60px" />
+    <SkeletonText width="60px" />
+    <SkeletonText width="60px" />
+    </>
+    
   );
 };
 
-export default ProjectSkeleton;
+export default ProjectRowSkeleton;

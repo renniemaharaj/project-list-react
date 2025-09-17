@@ -5,10 +5,12 @@ import { ChevronRightIcon } from "lucide-react";
 import { Button } from "@primer/react";
 // import Avatar from "@mui/material/Avatar";
 import { useNavigationTransition } from "../../state/hooks/transition/useNavigationTransition";
+import ProjectActivity from "./ProjectActivity";
+// import { Card } from "@mui/material";
 
 const ProjectMeta = ({
   project,
-  // projectMeta,
+  projectMeta,
   size = "sm",
 }: {
   project: ProjectProps;
@@ -19,7 +21,7 @@ const ProjectMeta = ({
   const formatDate = (timestamp: number) => {
     if (timestamp) return format(new Date(timestamp), "MMM dd, yyyy");
   };
-  
+
   return (
     <>
       {/* Collapse/Expand Button */}
@@ -42,23 +44,6 @@ const ProjectMeta = ({
           size === "lg" ? "h-20" : "h-0"
         } overflow-auto flex flex-col gap-3 transition-all`}
       >
-        {/* Manager Info */}
-        {/* {projectMeta?.manager && (
-          <Flex className="items-center gap-2">
-            <Text size="2" className="font-medium">
-              Project Manager:{" "}
-              {(projectMeta as ProjectMetaData)?.manager.firstName}{" "}
-              {projectMeta.manager.lastName}
-            </Text>
-            <Avatar
-              src={projectMeta?.manager.profilePicture}
-              // fallback={projectMeta.manager.firstName}
-              alt={`${projectMeta.manager.firstName} ${projectMeta.manager.lastName}`}
-              // className="!w-4 !h-4"
-            />
-          </Flex>
-        )} */}
-
         {/* Project Basic Info */}
         <div className="flex flex-wrap gap-4 text-sm text-gray-600">
           <Flex className="flex gap-3 flex-row">
@@ -96,6 +81,9 @@ const ProjectMeta = ({
             </span>
           </Flex>
         </div>
+
+        {/* Project Activity Sparkline */}
+        {projectMeta && <ProjectActivity projectMeta={projectMeta} />}
       </Flex>
     </>
   );

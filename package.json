@@ -15,6 +15,7 @@
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^7.3.1",
     "@mui/x-charts": "^8.10.2",
+    "@mui/x-date-pickers": "^8.11.2",
     "@primer/react": "^37.31.0",
     "@primer/react-brand": "^0.57.2",
     "@radix-ui/themes": "^3.2.1",

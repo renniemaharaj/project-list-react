@@ -10,14 +10,8 @@ import { SkeletonText } from "@primer/react/experimental";
 const ProjectRow = ({ project }: { project: ProjectProps }) => {
   const tableRef = useRef<HTMLTableRowElement>(null);
   const { transitionTo } = useNavigationTransition();
-  const {
-    projectMeta,
-    debit,
-    credit,
-    outOfBudget,
-    error,
-    isLoading,
-  } = useProjectComputed(project.ID, tableRef);
+  const { projectMeta, debit, credit, outOfBudget, error, isLoading } =
+    useProjectComputed(project.ID, tableRef);
 
   // Derive fields
   const manager =
@@ -47,7 +41,7 @@ const ProjectRow = ({ project }: { project: ProjectProps }) => {
         <>
           <TableCell>
             {isLoading ? (
-              <SkeletonText width="80px" />
+             <SkeletonText width="50px" />
             ) : (
               <Link onClick={() => transitionTo(`/project/${project.ID}`)}>
                 <Heading className="cursor-pointer !text-sm">
@@ -59,40 +53,54 @@ const ProjectRow = ({ project }: { project: ProjectProps }) => {
 
           <TableCell>
             {isLoading ? (
-              <SkeletonText width="60px" />
+              <SkeletonText width="50px" />
+            ) : manager ? (
+              manager
             ) : (
-              manager ?? <em className="text-gray-500">Unassigned</em>
+              <SkeletonText width="50px" />
             )}
           </TableCell>
 
           <TableCell align="right">
             {isLoading ? (
-              <SkeletonText width="40px" />
-            ) : (
-              <span style={{ color: hoursAssigned > hoursUsed ? "green" : "orange" }}>
+              <SkeletonText width="50px" />
+            ) : hoursAssigned ? (
+              <span
+                style={{
+                  color: hoursAssigned > hoursUsed ? "green" : "orange",
+                }}
+              >
                 {hoursAssigned.toFixed(2)}
               </span>
+            ) : (
+              <SkeletonText width="50px" />
             )}
           </TableCell>
 
           <TableCell align="right">
             {isLoading ? (
-              <SkeletonText width="40px" />
-            ) : (
-              <span style={{ color: hoursUsed > hoursAssigned ? "red" : "inherit" }}>
+              <SkeletonText width="50px" />
+            ) : hoursUsed ? (
+              <span
+                style={{ color: hoursUsed > hoursAssigned ? "red" : "inherit" }}
+              >
                 {hoursUsed.toFixed(2)}
               </span>
+            ) : (
+              <SkeletonText width="50px" />
             )}
           </TableCell>
 
           <TableCell>
             {isLoading ? (
               <SkeletonText width="50px" />
-            ) : (
+            ) : credit || debit ? (
               <Token
                 color={outOfBudget ? "red" : "green"}
                 text={outOfBudget ? "OOB" : "Healthy"}
               />
+            ) : (
+              <SkeletonText width="50px" />
             )}
           </TableCell>
         </>

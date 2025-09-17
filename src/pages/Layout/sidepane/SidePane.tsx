@@ -1,12 +1,13 @@
 import { BookIcon } from "lucide-react";
 import { Blankslate } from "@primer/react/experimental";
 import { useAtom } from "jotai";
-import { Button } from "@mui/material";
+// import { Button } from "@mui/material";
 import { useRef } from "react";
-import { Separator } from "@radix-ui/themes";
+// import { Separator } from "@radix-ui/themes";
 import useQueryProjects from "../../../state/hooks/tanstack/useQueryProjects";
 import { projectExplorerPageNumberAtom } from "../../../state/app.atoms";
-import ProjectTable from "../../../pkg/project/ProjectTable";
+// import ProjectTable from "../../../pkg/project/ProjectTable";
+import ProjectResults from "../../../pkg/project/ProjectResults";
 
 const SidePane = () => {
   const { error, data } = useQueryProjects();
@@ -47,12 +48,20 @@ const SidePane = () => {
   return (
     <>
       {/* <CardContent> */}
-        <ProjectTable projectIDs={data ?? []} containerRef={tableRef} />
+      {/* <ProjectTable projectIDs={data ?? []} containerRef={tableRef} /> */}
+      <ProjectResults
+        data={data ?? []}
+        variant="card"
+        onPagePrevious={
+          projectExplorerPageNumber > 0 ? decrementPage : undefined
+        }
+        onPageForward={incrementPage}
+      />
       {/* </CardContent> */}
 
-      <Separator className="mt-1" size="4"/>
-      
-      <div className="flex flex-row">
+      {/* <Separator className="mt-1" size="4"/> */}
+
+      {/* <div className="flex flex-row">
         {projectExplorerPageNumber > 0 && (
           <Button size="small" variant="text" className="w-full" onClick={decrementPage}>
             Previous Page
@@ -61,7 +70,7 @@ const SidePane = () => {
         <Button size="small" variant="text" className="w-full" onClick={incrementPage}>
           Next Page
         </Button>
-      </div>
+      </div> */}
     </>
   );
 };

@@ -56,28 +56,35 @@ export const FScreenLayout: React.FC<FullScreenLayoutProps> = ({
             width: isCollapsed ? `${paneCW[0]}rem` : `${paneCW[1]}rem`,
           }}
         >
-          <div
+            <div
             className="h-full w-full scroll-smooth p-2 overflow-x-hidden overflow-y-auto"
-          >
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+            <style>
+              {`
+              .hide-scrollbar::-webkit-scrollbar {
+                display: none;
+              }
+              `}
+            </style>
             {/* Collapse/Expand Button */}
             <div className="w-full mb-2 overflow-auto">
               <Button
-                size="small"
-                // variant="invisible"
-                variant="link"
-                className="holographic-card w-full"
-                onClick={() => setIsCollapsed(!isCollapsed)}
-                aria-label={isCollapsed ? "Expand panel" : "Collapse panel"}
+              size="small"
+              variant="link"
+              className="holographic-card w-full"
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              aria-label={isCollapsed ? "Expand panel" : "Collapse panel"}
               >
-                {isCollapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+              {isCollapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
               </Button>
             </div>
 
             {/* Side Panel Content (hidden when collapsed) */}
             <div className={`${isCollapsed && "hidden"}`}>
-                {side}
+              {side}
             </div>
-          </div>
+            </div>
         </div>
 
         {/* Main Content */}

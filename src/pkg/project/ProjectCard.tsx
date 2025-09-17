@@ -1,4 +1,4 @@
-import { Flex, Heading, Text, Spinner } from "@radix-ui/themes";
+import { Flex, Heading, Text, Spinner, Separator } from "@radix-ui/themes";
 import type { ProjectMetaData, ProjectProps } from "./types";
 import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
 import ProjectMeta from "./ProjectMeta";
@@ -31,10 +31,13 @@ export default function ProjectCard({
     isLoading,
   } = useProjectComputed(project.ID, parentRef);
 
+  const hoverBorderColor =
+    theme === "light" ? "hover:!border-blue-500" : "hover:!border-purple-400";
+
   return (
     <div
       ref={parentRef}
-      className={`${variant === "card" ? "max-w-[22rem]" : "w-full"}`}
+      className={`shadow-sm ${variant === "card" ? "max-w-[22rem]" : "w-full"}`}
     >
       {
         <>
@@ -46,10 +49,13 @@ export default function ProjectCard({
           )}
 
           <Card
-            elevation={2}
-            className={`${theme === "light" ? "!bg-blue-50" : ""} p-4 shadow-md rounded-xl transition-all`}
+            variant="outlined"
+            className={`!transition-all !duration-300 ease-in-out shadow-inner p-3 flex flex-col items-stretch
+          ${
+            theme === "light" ? "!bg-blue-50" : ""
+          } hover:!border ${hoverBorderColor} rounded-md overflow-hidden`}
           >
-            <Flex direction="column" gap="4">
+            <Flex direction="column" className="" gap="4">
               {/* Header */}
               <Flex align="center" justify="between">
                 <Heading size="4" className="font-semibold">
@@ -60,6 +66,7 @@ export default function ProjectCard({
                   text={outOfBudget ? "OOB" : "Healthy"}
                 />
               </Flex>
+              <Separator size="4" />
 
               {/* Metrics / Gauges */}
               <Flex align="center" justify="between" className="gap-6">
@@ -72,8 +79,7 @@ export default function ProjectCard({
                       <AnimatedNumber
                         number={debit}
                         fontStyle={{ fontSize: 20 }}
-                      />{" "}
-                      hrs
+                      />
                     </div>
                   </div>
                   <div>
@@ -87,8 +93,7 @@ export default function ProjectCard({
                           fontSize: 20,
                           color: credit > debit ? "red" : "green",
                         }}
-                      />{" "}
-                      hrs
+                      />
                     </div>
                   </div>
                 </div>
@@ -138,6 +143,7 @@ export default function ProjectCard({
                 </Text>
               )}
 
+              <Separator size="4" />
               {/* Meta Info */}
               <ProjectMeta
                 size={variant === "full" ? "lg" : "sm"}

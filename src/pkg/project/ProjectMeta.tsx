@@ -2,11 +2,9 @@ import { format } from "date-fns";
 import type { ProjectMetaData, ProjectProps } from "./types";
 import { Flex } from "@radix-ui/themes";
 import { ChevronRightIcon } from "lucide-react";
-import { Button } from "@primer/react";
-// import Avatar from "@mui/material/Avatar";
 import { useNavigationTransition } from "../../state/hooks/transition/useNavigationTransition";
 import ProjectActivity from "./ProjectActivity";
-// import { Card } from "@mui/material";
+import { Button } from "@mui/material";
 
 const ProjectMeta = ({
   project,
@@ -29,12 +27,12 @@ const ProjectMeta = ({
         <div className="w-full overflow-auto">
           <Button
             size="small"
-            variant="link"
-            className={`holographic-card w-full`}
+            variant="outlined"
+            className={`w-full  flex items-center justify-between text-sm`}
             onClick={() => transitionTo(`/project/${project.ID}`)}
             aria-label="Open this project"
           >
-            <ChevronRightIcon />
+           Open Project <ChevronRightIcon className="w-2 h-2 ml-2" />
           </Button>
         </div>
       )}

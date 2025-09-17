@@ -46,7 +46,7 @@ const StatCard = ({
     >
       <Card
         variant="outlined"
-        className={`!transition-all !duration-300 ease-in-out shadow-md p-0 flex flex-col items-stretch
+        className={`!transition-all !duration-300 ease-in-out shadow-sm p-0 flex flex-col items-stretch
           ${theme === "light" ? "!bg-blue-50" : ""} hover:scale-[1.01] hover:!border ${hoverBorderColor} rounded-md overflow-hidden`}
       >
         {/* Main content */}

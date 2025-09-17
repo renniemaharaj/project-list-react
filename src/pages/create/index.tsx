@@ -1,11 +1,7 @@
-import { useSetAtom } from "jotai";
-import { useEffect } from "react";
-import { showCreateFormAtom } from "../../state/app.atoms";
+import { ProjectForm } from "../../pkg/forms/ProjectForm";
 
 const CreateProject = () => {
-  const setShowCreateForm = useSetAtom(showCreateFormAtom);
-  useEffect(() => setShowCreateForm(true), [setShowCreateForm]);
-  return <></>;
+  return <ProjectForm onClose={() => {}} />;
 };
 
 export default CreateProject;

@@ -36,7 +36,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
         overflow: "auto",
       }}
     >
-      <Table stickyHeader size="small">
+      <Table stickyHeader size="small" className="min-h-[10rem]">
         <TableHead>
           <TableRow>
             {["Project", "Manager", "Hrs Assigned", "Hrs Used", "Status"].map(

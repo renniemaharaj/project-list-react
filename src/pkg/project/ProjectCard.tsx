@@ -1,19 +1,19 @@
 import { useRef } from "react";
-import { Flex, Heading, Text, Separator } from "@radix-ui/themes";
+import { Flex, Heading, Text, Separator, HoverCard } from "@radix-ui/themes";
 import Card from "@mui/material/Card";
-import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
 import { PieChart } from "@mui/x-charts";
 import { Token } from "@primer/react";
 
 import ProjectMeta from "./ProjectMeta";
 import ProjectActivity from "./ProjectActivity";
 import TimeEntries from "./TimeEntries";
-import AnimatedNumber from "../animatedNumber";
 
 import useProjectComputed from "../../state/hooks/useProjectComputed";
 import useThemeContext from "../../state/hooks/theme/useThemeContext";
 
 import type { ProjectMetaData, ProjectProps } from "./types";
+import ProjectMetrics from "./ProjectMetrics";
+import ProjectGauge from "./ProjectGauge";
 
 export default function ProjectCard({
   project,
@@ -125,73 +125,27 @@ export default function ProjectCard({
         </Flex>
 
         {/* Activity Sparkline */}
-        {projectMeta && <ProjectActivity projectMeta={projectMeta} />}
+        {/* Activity */}
+        {projectMeta &&
+          (variant === "card" ? (
+            <HoverCard.Root closeDelay={150}>
+              <HoverCard.Trigger>
+                <div className="cursor-pointer p-2 text-sm text-gray-500 text-center hover:text-gray-700">
+                  View Activity
+                </div>
+              </HoverCard.Trigger>
+              <HoverCard.Content
+                side="top"
+                align="center"
+                className="z-50 rounded-md shadow-lg bg-white dark:bg-gray-900 p-3 w-40"
+              >
+                <ProjectActivity projectMeta={projectMeta} />
+              </HoverCard.Content>
+            </HoverCard.Root>
+          ) : (
+            <ProjectActivity projectMeta={projectMeta} />
+          ))}
       </Card>
     </div>
-  );
-}
-
-function ProjectMetrics({ debit, credit }: { debit: number; credit: number }) {
-  return (
-    <div className="flex flex-col gap-3">
-      <MetricRow
-        label="Hrs Assigned:"
-        value={debit}
-        color={credit > debit ? "orange" : ""}
-      />
-      <MetricRow
-        label="Hrs Used:"
-        value={credit}
-        color={credit > debit ? "red" : "green"}
-      />
-    </div>
-  );
-}
-
-function MetricRow({
-  label,
-  value,
-  color,
-}: {
-  label: string;
-  value: number;
-  color?: string;
-}) {
-  return (
-    <div className="flex flex-row items-center gap-3">
-      <Text size="2" className="font-medium text-gray-700">
-        {label}
-      </Text>
-      <div className="text-lg font-semibold">
-        <AnimatedNumber
-          number={value}
-          fontStyle={{ fontSize: 20, ...(color ? { color } : {}) }}
-        />
-      </div>
-    </div>
-  );
-}
-
-function ProjectGauge({ debit, credit }: { debit: number; credit: number }) {
-  return (
-    <Gauge
-      width={100}
-      height={100}
-      value={credit}
-      valueMax={debit || 1}
-      text={({ value, valueMax }) =>
-        `${parseFloat(value?.toFixed(1) ?? "0")}/${parseFloat(
-          valueMax.toFixed(1)
-        )}`
-      }
-      sx={{
-        [`& .${gaugeClasses.valueArc}`]: {
-          fill: credit > debit ? "red" : "#52b202",
-        },
-        [`& .${gaugeClasses.referenceArc}`]: {
-          fill: "#e5e7eb",
-        },
-      }}
-    />
   );
 }

@@ -1,9 +1,9 @@
 import { Flex, Heading, IconButton, Separator } from "@radix-ui/themes";
 import { useState } from "react";
-import { Button } from "@primer/react";
 import { LayoutGrid, StretchHorizontal } from "lucide-react";
 import Project from "../../pkg/project";
 import ProjectTable from "../../pkg/project/ProjectTable";
+import { Button } from "@primer/react";
 
 const ProjectResults = ({
   data,
@@ -13,7 +13,7 @@ const ProjectResults = ({
   onPageForward,
 }: {
   data: number[];
-  className?: string,
+  className?: string;
   variant?: "list" | "card" | "full";
   onPagePrevious?: () => void;
   onPageForward?: () => void;
@@ -25,47 +25,61 @@ const ProjectResults = ({
   return (
     <Flex className={`${className} flex flex-col justify-center gap-2`}>
       {/* Header Controls */}
-      <Flex className="flex w-full !flex-row px-2 gap-1 !justify-end items-center">
-        {/* View Controls */}
-        <IconButton
-          size="1"
-          aria-label="List View"
-          onClick={() => setRenderView("list")}
-          disabled={renderView === "list"}
-        >
-          <LayoutGrid className="w-2 h-2" />
-        </IconButton>
+      <Flex className="flex w-full !flex-row px-2 gap-2 !justify-end items-center">
+        {/* View Controls Group */}
+        <Flex className="flex flex-row gap-1 px-1 py-0.5 rounded-md">
+          <IconButton
+            size="1"
+            aria-label="List View"
+            onClick={() => setRenderView("list")}
+            disabled={renderView === "list"}
+          >
+            <LayoutGrid className="w-2 h-2" />
+          </IconButton>
 
-        <IconButton
-          size="1"
-          aria-label="Card View"
-          onClick={() => setRenderView("card")}
-          disabled={renderView === "card"}
-        >
-          <LayoutGrid className="w-2 h-2" />
-        </IconButton>
+          <IconButton
+            size="1"
+            aria-label="Card View"
+            onClick={() => setRenderView("card")}
+            disabled={renderView === "card"}
+          >
+            <LayoutGrid className="w-2 h-2" />
+          </IconButton>
 
-        <IconButton
-          size="1"
-          aria-label="Full View"
-          onClick={() => setRenderView("full")}
-          disabled
-        >
-          <StretchHorizontal className="w-2 h-2" />
-        </IconButton>
+          <IconButton
+            size="1"
+            aria-label="Full View"
+            onClick={() => setRenderView("full")}
+            disabled
+          >
+            <StretchHorizontal className="w-2 h-2" />
+          </IconButton>
+        </Flex>
 
-        {/* Pagination Controls */}
-        {onPagePrevious && (
-          <Button variant="link" onClick={onPagePrevious} aria-label="Previous">
-            Previous
-          </Button>
-        )}
+        {/* Pagination Controls Group */}
+        <Flex className="flex flex-row gap-1 px-2 py-0.5 rounded-md">
+          {onPagePrevious && (
+            <Button
+              size="small"
+              variant="link"
+              onClick={onPagePrevious}
+              aria-label="Previous"
+            >
+              Previous
+            </Button>
+          )}
 
-        {onPageForward && (
-          <Button variant="link" onClick={onPageForward} aria-label="Next Page">
-            Forward
-          </Button>
-        )}
+          {onPageForward && (
+            <Button
+              size="small"
+              variant="link"
+              onClick={onPageForward}
+              aria-label="Next Page"
+            >
+              Forward
+            </Button>
+          )}
+        </Flex>
       </Flex>
 
       {/* Project Listing */}
